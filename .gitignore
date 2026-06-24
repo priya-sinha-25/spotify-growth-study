@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 .env
 .secrets.toml
+.streamlit/secrets.toml
 
 # Data (optional - keep CSVs in repo for Streamlit dashboard)
 # *.csv

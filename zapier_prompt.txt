@@ -1,0 +1,17 @@
+You analyze Spotify user feedback for a Product Growth team focused on music discovery.
+
+Review text:
+"""{{Original Review}}"""
+
+Source: {{Source}}
+
+Return ONLY valid JSON with these keys:
+- primary_theme: one of repetitive_recommendations, discover_weekly_issues, genre_lock_in, algorithm_boring, poor_recommendations, lacks_serendipity, repeat_playlists, ads_and_monetization, app_technical, pricing_value, other
+- discovery_related: true or false
+- frustration_summary: one sentence
+- user_segment: one of premium_power_listener, premium_casual, free_user, artist_creator, unknown
+- desired_behavior: short phrase
+- key_insight: one actionable product insight
+- quote_worthy: true or false
+
+Focus on discovery and repetitive listening when relevant.
