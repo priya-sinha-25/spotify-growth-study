@@ -1,0 +1,24 @@
+{
+  "total_reviews": 271,
+  "discovery_related_reviews": 120,
+  "top_themes": {
+    "repetitive_recommendations": 48,
+    "poor_recommendations": 23,
+    "lacks_serendipity": 14,
+    "discover_weekly_issues": 12,
+    "algorithm_boring": 10,
+    "repeat_playlists": 9,
+    "genre_lock_in": 4
+  },
+  "top_segments": {
+    "unknown": 70,
+    "premium_power_listener": 30,
+    "artist_creator": 13,
+    "free_user": 7
+  },
+  "by_source": {
+    "Reddit": 98,
+    "SpotifyCommunity": 16,
+    "PlayStore": 6
+  }
+}
