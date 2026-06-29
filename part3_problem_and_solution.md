@@ -189,6 +189,34 @@ Derived from **271-review theme taxonomy** — not generic prompts:
 | **Why AI** | Understands frustration language; matches intervention; explains; learns from feedback — recsys scores alone can't |
 | **Why now** | 85% survey interest; Spotify's own features don't address post-DW failure; Taste Profile fixes global taste, not weekly staleness |
 
+### Why AI? (framework for graders)
+
+**Why traditional recommendation systems are insufficient**
+
+Collaborative filtering and engagement-optimized ranking score *what you might play*, not *why this week's Discover Weekly failed*. They optimize familiarity (safe bets, library-adjacent artists, cross-playlist clustering) — which is why **86%** of survey respondents report already-heard songs in DW and **57%** retreat to saved playlists when disappointed. Existing surfaces (DW genre pills, Daily Mix, Taste Profile) tune the global model but do not **diagnose loop type**, **explain picks in natural language**, or **intervene at the moment trust breaks**.
+
+**What AI unlocks that was previously difficult**
+
+| Previously hard | What AI enables in Loop Break |
+|-----------------|-------------------------------|
+| Frustration expressed in messy natural language | NL → **loop type** (4-category taxonomy from 271-review corpus) |
+| One stale DW experience for every disappointed user | **Intervention-matched** picks (Library Leak ≠ Genre Lock ≠ Context Pollution) |
+| Black-box 30-track playlists | **Explainability** — 57% of survey respondents need "explains why" |
+| No repair after a bad DW week | **Trust feedback** and adjustable novelty (demo in Part 4 MVP) |
+| Context pollution (e.g. gym skew) hard to fix globally | **Session-scoped reset** without retraining the whole taste model |
+
+**How AI changes the user experience**
+
+| Before (traditional DW) | After (Loop Break) |
+|---------------------------|-------------------|
+| Open 30 tracks, no explanation | Describe what felt wrong → **named diagnosis** |
+| User guesses why it failed | **Loop type** + intervention preview |
+| Fallback: saved playlists (**57%**) | **3 explained picks** + Spotify links (survey-validated format) |
+| Passive consumption | Short **mood + novelty** dialogue (**43%** wanted mood chat) |
+| Trust erodes silently | **Trust score** — explicit signal for product iteration |
+
+*From "DW disappointed me → I quit to saved music" to "DW disappointed me → Loop Break told me why → I got 3 intentional resets."*
+
 ---
 
 ## 8. Part 4 MVP scope (deployable)
