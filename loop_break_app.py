@@ -1,4 +1,4 @@
-"""Part 4: Loop Break — embedded in Spotify web player UI."""
+"""Part 4: Loop Break inside Spotify web player (screenshot-accurate layout)."""
 
 import os
 
@@ -17,251 +17,187 @@ from loop_break import (
 )
 
 SPOTIFY_LOGO = """
-<svg role="img" viewBox="0 0 24 24" width="32" height="32" fill="#1ed760" aria-hidden="true">
+<svg viewBox="0 0 24 24" width="32" height="32" fill="#1ed760">
   <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
 </svg>
 """
 
-SPOTIFY_CSS = """
+CSS = """
 <style>
     #MainMenu, footer, header {visibility: hidden;}
-    .stApp { background: #000; }
+    section[data-testid="stSidebar"] {display: none !important;}
+    .stApp {background: #121212;}
 
     .main .block-container {
-        padding-top: 4.25rem !important;
-        padding-left: 22rem !important;
-        padding-right: 1.5rem !important;
-        padding-bottom: 2rem !important;
+        padding: 64px 24px 100px 362px !important;
         max-width: 100% !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-        position: relative !important;
-        z-index: 100 !important;
+        margin: 0 !important;
     }
 
-    section[data-testid="stSidebar"] {
-        background: #000 !important;
-        border-right: 1px solid #282828;
+    .ui-top {
+        position: fixed; top: 0; left: 0; right: 0; height: 64px;
+        background: #000; z-index: 200; display: flex; align-items: center;
+        gap: 16px; padding: 0 24px; pointer-events: none;
+    }
+    .ui-home {
+        width: 48px; height: 48px; background: #1f1f1f; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center; color: #fff;
+    }
+    .ui-search {
+        flex: 0 1 480px; height: 48px; background: #1f1f1f; border-radius: 500px;
+        display: flex; align-items: center; padding: 0 16px; gap: 12px;
+        color: #b3b3b3; font-size: 14px;
+    }
+    .ui-search .lib {margin-left: auto; opacity: 0.8;}
+    .ui-top-links {
+        margin-left: auto; display: flex; align-items: center; gap: 28px;
+        color: #b3b3b3; font-size: 14px; font-weight: 600;
+    }
+    .ui-top-links .sep {width: 1px; height: 24px; background: #282828;}
+    .ui-login {
+        background: #fff; color: #000; font-weight: 700; padding: 12px 32px;
+        border-radius: 500px; font-size: 16px;
     }
 
-    .spotify-topbar {
-        position: fixed; top: 0; left: 0; right: 0; height: 56px;
-        background: #000; z-index: 50;
-        display: flex; align-items: center; gap: 1rem;
-        padding: 0 1.25rem; border-bottom: 1px solid #1a1a1a;
-        pointer-events: none;
-    }
-
-    .spotify-topbar .logo { display: flex; align-items: center; flex-shrink: 0; }
-
-    .home-btn {
-        width: 48px; height: 48px; background: #1a1a1a; border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        color: #b3b3b3; font-size: 1.2rem; flex-shrink: 0;
-    }
-
-    .search-pill {
-        flex: 1; max-width: 480px; height: 48px; background: #1a1a1a;
-        border-radius: 500px; display: flex; align-items: center;
-        padding: 0 1rem; gap: 0.65rem; color: #b3b3b3; font-size: 0.9rem;
-    }
-
-    .topbar-right {
-        margin-left: auto; display: flex; align-items: center;
-        gap: 1.25rem; color: #b3b3b3; font-size: 0.82rem; font-weight: 600;
-    }
-
-    .topbar-right .premium { color: #fff; }
-    .login-pill {
-        background: #fff; color: #000; font-weight: 700;
-        padding: 0.55rem 1.75rem; border-radius: 500px; font-size: 0.95rem;
-    }
-
-    .user-chip {
-        background: #282828; color: #fff; font-weight: 600;
-        padding: 0.4rem 0.85rem; border-radius: 500px; font-size: 0.82rem;
-    }
-
-    .spotify-lib-sidebar {
-        position: fixed; top: 56px; left: 0; bottom: 0; width: 21rem;
-        background: #000; border-right: 1px solid #1a1a1a;
-        z-index: 50; padding: 0.5rem 0.75rem;
+    .ui-left {
+        position: fixed; top: 0; left: 0; width: 350px; bottom: 0;
+        background: #000; z-index: 150; padding: 8px; pointer-events: none;
         display: flex; flex-direction: column;
-        pointer-events: none;
     }
-
-    .lib-header {
+    .ui-lib-box {
+        background: #121212; border-radius: 8px; flex: 1;
+        display: flex; flex-direction: column; padding: 4px 0;
+    }
+    .ui-lib-head {
         display: flex; justify-content: space-between; align-items: center;
-        color: #fff; font-weight: 700; font-size: 1rem;
-        padding: 0.65rem 0.5rem;
+        padding: 12px 16px; color: #fff; font-weight: 700; font-size: 16px;
+    }
+    .ui-podcast {
+        margin: 8px; background: #181818; border-radius: 8px; padding: 16px;
+    }
+    .ui-podcast h4 {color: #fff; font-size: 14px; margin: 0 0 8px; font-weight: 700;}
+    .ui-podcast p {color: #b3b3b3; font-size: 13px; margin: 0 0 16px; line-height: 1.4;}
+    .ui-podcast-btn {
+        display: inline-block; background: #fff; color: #000; font-weight: 700;
+        font-size: 14px; padding: 8px 16px; border-radius: 500px;
+    }
+    .ui-left-foot {
+        padding: 16px; font-size: 10px; color: #6a6a6a; line-height: 1.8;
+    }
+    .ui-lang {
+        display: inline-flex; align-items: center; gap: 6px;
+        border: 1px solid #6a6a6a; border-radius: 500px; padding: 6px 12px;
+        color: #fff; font-size: 12px; margin-top: 12px;
     }
 
-    .lib-card {
-        background: #121212; border-radius: 8px; padding: 1rem;
-        margin-top: 0.5rem;
+    .ui-player {
+        position: fixed; bottom: 0; left: 0; right: 0; height: 72px;
+        background: linear-gradient(90deg, #5038a0, #1e3264);
+        z-index: 200; pointer-events: none;
+        display: flex; align-items: center; padding: 0 24px; color: #fff; font-size: 13px;
     }
 
-    .lib-card h4 { color: #fff; font-size: 0.95rem; margin: 0 0 0.35rem; font-weight: 700; }
-    .lib-card p { color: #b3b3b3; font-size: 0.8rem; margin: 0 0 0.75rem; line-height: 1.4; }
+    .main-view {min-height: 70vh;}
+    .row-head {
+        display: flex; justify-content: space-between; align-items: center;
+        margin: 24px 0 16px;
+    }
+    .row-head h2 {color: #fff; font-size: 24px; font-weight: 700; margin: 0;}
+    .row-head a {color: #b3b3b3; font-size: 13px; font-weight: 600; text-decoration: none;}
 
-    .lib-pill-btn {
-        display: inline-block; background: #fff; color: #000;
-        font-weight: 700; font-size: 0.85rem; padding: 0.45rem 1rem;
-        border-radius: 500px;
+    .h-scroll {display: flex; gap: 24px; overflow-x: auto; padding-bottom: 8px;}
+    .t-card {flex: 0 0 180px;}
+    .t-cover {
+        width: 180px; height: 180px; border-radius: 6px; margin-bottom: 16px;
+        background-size: cover; background-position: center;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    }
+    .t-title {color: #fff; font-size: 16px; font-weight: 600; margin: 0;}
+    .t-artist {color: #b3b3b3; font-size: 14px; margin: 4px 0 0;}
+
+    .a-card {flex: 0 0 180px; text-align: center;}
+    .a-img {
+        width: 180px; height: 180px; border-radius: 50%; margin-bottom: 16px;
+        background-size: cover; background-position: center;
     }
 
-    .lib-nav-item {
-        display: flex; align-items: center; gap: 0.75rem;
-        padding: 0.55rem 0.5rem; border-radius: 4px;
-        color: #b3b3b3; font-size: 0.9rem; margin: 0.15rem 0;
+    .step-hint {
+        background: #282828; border-left: 3px solid #1db954;
+        padding: 10px 14px; margin-bottom: 16px; border-radius: 4px;
+        color: #fff; font-size: 13px;
     }
 
-    .lib-nav-item.active { background: #282828; color: #fff; }
-    .lib-nav-item .dot {
-        width: 40px; height: 40px; border-radius: 4px; flex-shrink: 0;
-    }
-    .lib-nav-item .dot.dw {
-        background: linear-gradient(135deg, #1a472a, #2d1b4e);
-    }
-
-    .lib-footer {
-        margin-top: auto; padding: 1rem 0.5rem;
-        font-size: 0.62rem; color: #6a6a6a; line-height: 1.6;
-    }
-
-    .loop-panel-box {
-        background: #121212;
-        border: 1px solid #282828;
-        border-radius: 8px;
-        padding: 1rem 1.1rem;
-        margin-top: 0.5rem;
-    }
-
-    .demo-guide {
-        background: #1a472a;
-        border: 1px solid #1db954;
-        border-radius: 8px;
-        padding: 0.75rem 1rem;
-        margin-bottom: 1rem;
-    }
-    .demo-guide strong { color: #1db954; }
-    .demo-guide p { color: #fff; font-size: 0.88rem; margin: 0.25rem 0 0; line-height: 1.4; }
-
-    .action-row { margin-bottom: 1rem; }
-
-    .main-gradient {
-        background: linear-gradient(180deg, #1f1f1f 0%, #121212 320px, #121212 100%);
-        border-radius: 8px; padding: 1.5rem 1.5rem 2rem;
-        min-height: calc(100vh - 5rem);
-    }
-
-    .section-head {
-        display: flex; justify-content: space-between; align-items: baseline;
-        margin-bottom: 1rem;
-    }
-    .section-head h2 { color: #fff; font-size: 1.5rem; font-weight: 700; margin: 0; }
-    .section-head a { color: #b3b3b3; font-size: 0.82rem; font-weight: 600; text-decoration: none; }
-
-    .card-row { display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 0.5rem; }
-
-    .song-card {
-        flex: 0 0 180px; background: #181818; border-radius: 8px;
-        padding: 1rem; cursor: pointer; transition: background 0.15s;
-    }
-    .song-card:hover { background: #282828; }
-    .song-card .cover {
-        width: 100%; aspect-ratio: 1; border-radius: 6px; margin-bottom: 1rem;
-        background: linear-gradient(145deg, #1ed760, #509bf5 60%, #8c67ab);
-    }
-    .song-card .cover.alt { background: linear-gradient(145deg, #e13300, #7358ff); }
-    .song-card .title { color: #fff; font-weight: 600; font-size: 0.95rem; margin: 0; }
-    .song-card .sub { color: #b3b3b3; font-size: 0.82rem; margin: 0.35rem 0 0; }
-
-    .pl-header {
-        display: flex; gap: 1.5rem; align-items: flex-end; margin-bottom: 1.5rem;
-    }
+    .pl-hero {display: flex; gap: 24px; align-items: flex-end; margin-bottom: 24px;}
     .pl-cover {
-        width: 232px; height: 232px; flex-shrink: 0; border-radius: 4px;
-        background: linear-gradient(145deg, #1ed760 0%, #1db954 30%, #509bf5 70%, #8c67ab);
+        width: 232px; height: 232px; border-radius: 4px; flex-shrink: 0;
+        background: linear-gradient(145deg, #1ed760, #509bf5 55%, #8c67ab);
         box-shadow: 0 4px 60px rgba(0,0,0,0.5);
     }
-    .pl-type { color: #fff; font-size: 0.8rem; font-weight: 600; margin: 0 0 0.5rem; }
-    .pl-title { color: #fff; font-size: 3.5rem; font-weight: 900; margin: 0; line-height: 1.05; letter-spacing: -0.04em; }
-    .pl-meta { color: #b3b3b3; font-size: 0.85rem; margin-top: 0.75rem; }
-    .pl-meta strong { color: #fff; }
+    .pl-kicker {color: #fff; font-size: 14px; font-weight: 600; margin: 0;}
+    .pl-name {color: #fff; font-size: clamp(48px,6vw,96px); font-weight: 900; margin: 8px 0 0; line-height: 1;}
+    .pl-meta {color: #b3b3b3; font-size: 14px; margin-top: 16px;}
 
-    .play-btn {
-        width: 56px; height: 56px; background: #1db954; border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        color: #000; font-size: 1.5rem; margin-top: 1.25rem;
-        box-shadow: 0 8px 24px rgba(29,185,84,0.35);
+    .banner {
+        background: #1a2e1a; border: 1px solid #1db954; border-radius: 8px;
+        padding: 16px 20px; margin-bottom: 20px;
     }
+    .banner strong {color: #fff; font-size: 15px;}
+    .banner p {color: #b3b3b3; font-size: 13px; margin: 6px 0 0;}
 
-    .stale-strip {
-        background: linear-gradient(90deg, rgba(29,185,84,0.15), rgba(29,185,84,0.05));
-        border: 1px solid rgba(29,185,84,0.45);
-        border-radius: 8px; padding: 0.85rem 1rem;
-        margin-bottom: 1.25rem;
-        display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-    }
-    .stale-strip p { color: #fff; font-size: 0.9rem; font-weight: 600; margin: 0; }
-    .stale-strip small { color: #b3b3b3; font-size: 0.78rem; display: block; margin-top: 0.15rem; font-weight: 400; }
+    .tracks {width: 100%; border-collapse: collapse;}
+    .tracks th {color: #b3b3b3; font-weight: 400; font-size: 12px; text-align: left; padding: 8px 16px; border-bottom: 1px solid #282828;}
+    .tracks td {padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); color: #b3b3b3; font-size: 14px;}
+    .tracks .name {color: #fff;}
+    .tag {background: #3e3e3e; color: #b3b3b3; font-size: 10px; padding: 2px 6px; border-radius: 3px; margin-left: 6px;}
 
-    .track-table { width: 100%; border-collapse: collapse; }
-    .track-table th {
-        color: #b3b3b3; font-size: 0.72rem; font-weight: 400;
-        text-align: left; padding: 0.35rem 0.75rem; border-bottom: 1px solid #282828;
+    .loop-box {
+        background: #181818; border-radius: 8px; padding: 24px; max-width: 640px;
     }
-    .track-table td {
-        padding: 0.55rem 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.06);
-        color: #b3b3b3; font-size: 0.88rem;
-    }
-    .track-table .t-title { color: #fff; }
-    .lib-tag {
-        display: inline-block; background: #3e3e3e; color: #b3b3b3;
-        font-size: 0.62rem; padding: 0.1rem 0.35rem; border-radius: 3px;
-        margin-left: 0.4rem; vertical-align: middle;
-    }
-
-    .panel-handle {
-        width: 40px; height: 4px; background: #535353;
-        border-radius: 4px; margin: 0 auto 1rem;
-    }
-    .panel-title { color: #fff; font-size: 1.15rem; font-weight: 700; margin: 0 0 0.25rem; }
-    .panel-sub { color: #b3b3b3; font-size: 0.82rem; margin: 0 0 1rem; line-height: 1.4; }
-
-    .loop-pill {
+    .loop-box h2 {color: #fff; font-size: 28px; margin: 0 0 8px;}
+    .loop-box p {color: #b3b3b3; font-size: 14px; line-height: 1.5;}
+    .pill {
         display: inline-block; color: #1db954; border: 1px solid #1db954;
-        background: rgba(29,185,84,0.1); border-radius: 500px;
-        padding: 0.2rem 0.65rem; font-size: 0.72rem; font-weight: 600;
-        margin-bottom: 0.5rem;
+        border-radius: 500px; padding: 4px 12px; font-size: 12px; font-weight: 600;
+        margin-bottom: 12px;
     }
-
-    .pick-row {
-        background: #181818; border-radius: 8px; padding: 0.75rem;
-        margin-bottom: 0.5rem;
+    .pick {
+        background: #282828; border-radius: 8px; padding: 14px; margin: 10px 0;
     }
-    .pick-row .t { color: #fff; font-weight: 600; font-size: 0.88rem; margin: 0; }
-    .pick-row .a { color: #b3b3b3; font-size: 0.78rem; margin: 0.1rem 0 0.4rem; }
-    .pick-row .w { color: #d0d0d0; font-size: 0.74rem; line-height: 1.35; margin: 0.2rem 0; }
-    .pick-row .w em { color: #1db954; font-style: normal; font-weight: 600; }
+    .pick .s {color: #fff; font-weight: 600; margin: 0;}
+    .pick .ar {color: #b3b3b3; font-size: 13px; margin: 2px 0 8px;}
+    .pick .w {color: #ccc; font-size: 12px; margin: 4px 0;}
+    .pick em {color: #1db954; font-style: normal; font-weight: 600;}
 
-    .breadcrumb { color: #b3b3b3; font-size: 0.8rem; margin-bottom: 0.75rem; }
-    .breadcrumb span { color: #1db954; }
+    .nav-row {display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;}
 
     .stButton > button[kind="primary"] {
         background: #1db954 !important; color: #000 !important;
-        border: none !important; font-weight: 700 !important;
-        border-radius: 500px !important;
+        border: none !important; font-weight: 700 !important; border-radius: 500px !important;
     }
     .stButton > button[kind="secondary"] {
-        background: transparent !important; color: #fff !important;
-        border: 1px solid #535353 !important; border-radius: 500px !important;
+        background: #fff !important; color: #000 !important;
+        border: none !important; font-weight: 600 !important; border-radius: 500px !important;
     }
-
-    div[data-testid="stVerticalBlock"] > div:has(> div.loop-panel-marker) { display: none; }
 </style>
 """
+
+TRENDING = [
+    ("Ban Ja Tu", "Charan Preet, Badshah", "#c45c26"),
+    ("Die With A Smile", "Lady Gaga, Bruno Mars", "#8b4513"),
+    ("Ordinary", "Alex Warren", "#2f4f6f"),
+    ("Show Me Love", "WizTheMc, bees & honey", "#6b3fa0"),
+    ("Low Fade", "Karan Aujla, Ikky", "#1a1a2e"),
+    ("Tu Meri Main Tera", "Karan Aujla, Ikky", "#4a1942"),
+]
+
+ARTISTS = [
+    ("Pritam", "#2d5a27"),
+    ("Karan Aujla", "#1f1f1f"),
+    ("Sachin-Jigar", "#5c4033"),
+    ("Ikky", "#264653"),
+    ("Badshah", "#6b2d5c"),
+    ("Charan Preet", "#3d3d3d"),
+]
 
 DW_TRACKS = [
     ("Blinding Lights", "The Weeknd", "After Hours", "3:20", True),
@@ -270,197 +206,169 @@ DW_TRACKS = [
     ("Cruel Summer", "Taylor Swift", "Lover", "2:58", False),
     ("Save Your Tears", "The Weeknd", "After Hours", "3:35", True),
     ("Espresso", "Sabrina Carpenter", "Espresso", "2:55", False),
-    ("Starboy", "The Weeknd", "Starboy", "3:50", True),
-    ("Die For You", "The Weeknd", "Starboy", "4:20", False),
 ]
 
-TRENDING = [
-    ("Ban Ja Tu", "Charan Preet, Badshah", "alt"),
-    ("Die With A Smile", "Lady Gaga, Bruno Mars", ""),
-    ("Ordinary", "Alex Warren", "alt"),
-    ("Show Me Love", "WizTheMc, bees & honey", ""),
-]
-
-EXAMPLE_PROMPTS = [
+EXAMPLES = [
     "Discover Weekly had songs I already saved — feels like my library again.",
-    "Same indie mood every Monday. I want something new but still 'me'.",
-    "I only listen at the gym and now everything sounds like workout EDM.",
-    "When DW fails I go back to my 2019 playlist. I'm stuck in a loop.",
+    "Same indie mood every Monday. I want something new but still me.",
 ]
 
 
 def get_secret(key: str) -> str | None:
     try:
-        value = st.secrets.get(key)
-        if value:
-            return value
+        v = st.secrets.get(key)
+        if v:
+            return v
     except StreamlitSecretNotFoundError:
         pass
     return os.getenv(key)
 
 
-def init_session() -> None:
-    defaults = {
-        "lb_screen": "home",
-        "lb_panel": False,
-        "lb_step": "entry",
-        "lb_frustration": "",
-        "lb_diagnosis": None,
-        "lb_openness": "Nudge me slightly outside my comfort zone",
-        "lb_recommendations": None,
-        "lb_trust_score": None,
-    }
-    for key, value in defaults.items():
-        if key not in st.session_state:
-            st.session_state[key] = value
+def init() -> None:
+    for k, v in {
+        "view": "home",
+        "step": "entry",
+        "frustration": "",
+        "diagnosis": None,
+        "openness": "Nudge me slightly outside my comfort zone",
+        "recs": None,
+    }.items():
+        if k not in st.session_state:
+            st.session_state[k] = v
 
 
-def get_demo_hint() -> tuple[str, str]:
-    screen = st.session_state["lb_screen"]
-    panel = st.session_state["lb_panel"]
-    step = st.session_state["lb_step"]
-    if screen == "home":
-        return "Step 1 of 4", "You are on Spotify Home. Click the green button below: **Open Discover Weekly**."
-    if screen == "dw" and not panel:
-        return "Step 2 of 4", "Discover Weekly playlist. Click **Break the loop** to open Loop Break (right panel)."
-    if step == "entry":
-        return "Step 3 of 4", "Describe what felt wrong → click an example or type → **Run Loop Diagnostic**."
-    if step == "diagnostic":
-        return "Step 3 of 4", "Review your loop type. Set mood/novelty → **Get 3 Loop Break picks**."
-    return "Step 4 of 4", "Review 3 explained picks → rate trust → click **Done**."
-
-
-def render_demo_guide() -> None:
-    label, hint = get_demo_hint()
-    st.markdown(
-        f'<div class="demo-guide"><strong>{label} — Demo guide</strong><p>{hint}</p></div>',
-        unsafe_allow_html=True,
-    )
-
-
-def render_chrome(screen: str) -> None:
-    home_active = screen == "home"
-    dw_active = screen == "dw"
-
+def chrome(active: str) -> None:
+    """Fixed Spotify shell matching shared screenshot."""
     st.markdown(
         f"""
-        <div class="spotify-topbar">
-          <div class="logo">{SPOTIFY_LOGO}</div>
-          <div class="home-btn">⌂</div>
-          <div class="search-pill">🔍 &nbsp; What do you want to play?</div>
-          <div class="topbar-right">
-            <span class="premium">Premium</span>
-            <span>Support</span>
-            <span>Download</span>
-            <span>Install App</span>
-            <span class="user-chip">● Demo User</span>
+        <div class="ui-left">
+          <div class="ui-lib-box">
+            <div class="ui-lib-head">Your Library <span style="color:#b3b3b3;font-size:20px">+</span></div>
+            <div class="ui-podcast">
+              <h4>Let's find some podcasts to follow</h4>
+              <p>We'll keep you updated on new episodes</p>
+              <span class="ui-podcast-btn">Browse podcasts</span>
+            </div>
+          </div>
+          <div class="ui-left-foot">
+            Legal · Safety &amp; Privacy Center · Privacy Policy · Cookies · About Ads · Accessibility<br>
+            <span class="ui-lang">🌐 English</span>
           </div>
         </div>
-        <div class="spotify-lib-sidebar">
-          <div class="lib-header">Your Library <span style="color:#b3b3b3">+</span></div>
-          <div class="lib-nav-item {"active" if home_active else ""}">
-            <span>⌂</span> Home
-          </div>
-          <div class="lib-nav-item {"active" if dw_active else ""}">
-            <div class="dot dw"></div>
-            <div><div style="color:#fff;font-weight:600">Discover Weekly</div>
-            <div style="font-size:0.75rem">Playlist · Spotify</div></div>
-          </div>
-          <div class="lib-card">
-            <h4>Made For You</h4>
-            <p>Loop Break lives here — when Discover Weekly feels like a rerun, open the playlist and break the loop.</p>
-            <span class="lib-pill-btn">Growth prototype</span>
-          </div>
-          <div class="lib-footer">
-            Legal · Privacy · Cookies · About Ads<br>
-            🌐 English
+        <div class="ui-top">
+          <div>{SPOTIFY_LOGO}</div>
+          <div class="ui-home">⌂</div>
+          <div class="ui-search">🔍 &nbsp; What do you want to play? <span class="lib">📚</span></div>
+          <div class="ui-top-links">
+            <span>Premium</span><span>Support</span><span>Download</span>
+            <span class="sep"></span>
+            <span>Install App</span><span>Sign up</span>
+            <span class="ui-login">Log in</span>
           </div>
         </div>
+        <div class="ui-player">Fellowship prototype — Loop Break feature demo · not affiliated with Spotify AB</div>
         """,
         unsafe_allow_html=True,
     )
 
 
-def render_home() -> None:
-    render_demo_guide()
-    if st.button("▶  Open Discover Weekly", type="primary", key="open_dw", use_container_width=True):
-        st.session_state["lb_screen"] = "dw"
+def hint(text: str) -> None:
+    st.markdown(f'<div class="step-hint">{text}</div>', unsafe_allow_html=True)
+
+
+def nav_buttons() -> None:
+    c1, c2, c3, c4 = st.columns(4)
+    with c1:
+        if st.button("Home", key="nav_home", use_container_width=True):
+            st.session_state["view"] = "home"
+            st.session_state["step"] = "entry"
+            st.rerun()
+    with c2:
+        if st.button("Discover Weekly", key="nav_dw", use_container_width=True):
+            st.session_state["view"] = "dw"
+            st.rerun()
+    with c3:
+        if st.button("Loop Break", key="nav_lb", use_container_width=True):
+            st.session_state["view"] = "loop"
+            st.session_state["step"] = "entry"
+            st.rerun()
+    with c4:
+        if st.button("Reset", key="nav_reset", use_container_width=True):
+            for k in list(st.session_state.keys()):
+                del st.session_state[k]
+            st.rerun()
+
+
+def page_home() -> None:
+    hint("<b>Step 1:</b> Browse Spotify Home (matches live web UI). Click <b>Discover Weekly</b> above or the button below.")
+    if st.button("Open Discover Weekly →", type="primary", key="go_dw"):
+        st.session_state["view"] = "dw"
         st.rerun()
 
-    trending = ""
-    for title, artist, alt in TRENDING:
-        trending += f"""
-        <div class="song-card">
-          <div class="cover {alt}"></div>
-          <p class="title">{title}</p>
-          <p class="sub">{artist}</p>
+    cards = ""
+    for title, artist, color in TRENDING:
+        cards += f"""
+        <div class="t-card">
+          <div class="t-cover" style="background:{color}"></div>
+          <p class="t-title">{title}</p>
+          <p class="t-artist">{artist}</p>
+        </div>"""
+
+    artists = ""
+    for name, color in ARTISTS:
+        artists += f"""
+        <div class="a-card">
+          <div class="a-img" style="background:{color}"></div>
+          <p class="t-title">{name}</p>
         </div>"""
 
     st.markdown(
         f"""
-        <div class="main-gradient">
-          <div class="section-head"><h2>Made For You</h2><a href="#">Show all</a></div>
-          <div class="card-row">
-            <div class="song-card">
-              <div class="cover"></div>
-              <p class="title">Discover Weekly</p>
-              <p class="sub">Your weekly mixtape of fresh music</p>
-            </div>
-            <div class="song-card">
-              <div class="cover alt"></div>
-              <p class="title">Release Radar</p>
-              <p class="sub">Catch all the latest from artists you follow</p>
-            </div>
-            <div class="song-card">
-              <div class="cover"></div>
-              <p class="title">Daily Mix 1</p>
-              <p class="sub">Indie · Alt · The Strokes and more</p>
-            </div>
-          </div>
-          <div class="section-head" style="margin-top:2rem"><h2>Trending songs</h2><a href="#">Show all</a></div>
-          <div class="card-row">{trending}</div>
+        <div class="main-view">
+          <div class="row-head"><h2>Trending songs</h2><a href="#">Show all</a></div>
+          <div class="h-scroll">{cards}</div>
+          <div class="row-head"><h2>Popular artists</h2><a href="#">Show all</a></div>
+          <div class="h-scroll">{artists}</div>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
 
-def render_dw_playlist(compact: bool = False) -> None:
-    if not compact:
-        render_demo_guide()
+def page_dw() -> None:
+    hint("<b>Step 2:</b> Discover Weekly playlist — note <b>In your library</b> tags. Click <b>Loop Break</b> above or the button below.")
+    c1, c2 = st.columns([1, 1])
+    with c1:
+        if st.button("Break the loop →", type="primary", key="go_loop"):
+            st.session_state["view"] = "loop"
+            st.session_state["step"] = "entry"
+            st.rerun()
+    with c2:
+        if st.button("← Home", key="dw_home"):
+            st.session_state["view"] = "home"
+            st.rerun()
 
-    tracks = DW_TRACKS[:4] if compact else DW_TRACKS
     rows = ""
-    for i, (song, artist, album, dur, in_lib) in enumerate(tracks, start=1):
-        tag = '<span class="lib-tag">In your library</span>' if in_lib else ""
-        rows += f"""
-        <tr>
-          <td>{i}</td>
-          <td class="t-title">{song}{tag}<br><span style="color:#b3b3b3;font-size:0.8rem">{artist}</span></td>
-          <td>{album}</td>
-          <td>{dur}</td>
-        </tr>"""
+    for i, (song, artist, album, dur, lib) in enumerate(DW_TRACKS, 1):
+        tag = '<span class="tag">In your library</span>' if lib else ""
+        rows += f"<tr><td>{i}</td><td class='name'>{song}{tag}<br><span style='color:#b3b3b3;font-size:13px'>{artist}</span></td><td>{album}</td><td>{dur}</td></tr>"
 
     st.markdown(
         f"""
-        <div class="main-gradient">
-          <div class="breadcrumb">Home / Made For You / <span>Discover Weekly</span></div>
-          <div class="pl-header">
+        <div class="main-view">
+          <div class="pl-hero">
             <div class="pl-cover"></div>
             <div>
-              <p class="pl-type">Playlist</p>
-              <h1 class="pl-title">Discover Weekly</h1>
-              <p class="pl-meta"><strong>Spotify</strong> · 30 songs · about 1 hr 45 min · Updated Monday</p>
-              <div class="play-btn">▶</div>
+              <p class="pl-kicker">Playlist</p>
+              <h1 class="pl-name">Discover Weekly</h1>
+              <p class="pl-meta">Spotify · 30 songs · Updated Monday</p>
             </div>
           </div>
-          <div class="stale-strip">
-            <div>
-              <p>This week feels familiar</p>
-              <small>3 songs already in your library · Loop Break can diagnose why and reset your discovery.</small>
-            </div>
+          <div class="banner">
+            <strong>This week feels familiar</strong>
+            <p>3 songs already in your library. Loop Break diagnoses why and suggests 3 explained resets.</p>
           </div>
-          <table class="track-table">
+          <table class="tracks">
             <thead><tr><th>#</th><th>Title</th><th>Album</th><th>⏱</th></tr></thead>
             <tbody>{rows}</tbody>
           </table>
@@ -469,237 +377,145 @@ def render_dw_playlist(compact: bool = False) -> None:
         unsafe_allow_html=True,
     )
 
-    if not compact:
-        c1, c2 = st.columns(2)
-        with c1:
-            if not st.session_state["lb_panel"]:
-                if st.button("▶  Break the loop", type="primary", key="break_loop_btn", use_container_width=True):
-                    st.session_state["lb_panel"] = True
-                    st.session_state["lb_step"] = "entry"
-                    st.rerun()
-        with c2:
-            if st.button("← Back to Home", type="secondary", key="dw_back_home", use_container_width=True):
-                st.session_state["lb_screen"] = "home"
-                st.session_state["lb_panel"] = False
-                st.rerun()
 
+def page_loop() -> None:
+    step = st.session_state["step"]
 
-def render_panel_entry() -> None:
-    render_demo_guide()
-    st.markdown(
-        """
-        <div class="loop-panel-box">
-          <p class="panel-title">Loop Break</p>
-          <p class="panel-sub">Describe what went wrong with Discover Weekly.</p>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-    frustration = st.text_area(
-        "f",
-        value=st.session_state["lb_frustration"],
-        height=88,
-        placeholder="What felt off about this week's Discover Weekly?",
-        label_visibility="collapsed",
-        key="frustration_input",
-    )
-    st.caption("Quick fill:")
-    c1, c2 = st.columns(2)
-    for i, ex in enumerate(EXAMPLE_PROMPTS[:2]):
-        col = c1 if i == 0 else c2
-        with col:
-            if st.button(ex[:36] + "…", key=f"pex_{i}"):
-                st.session_state["lb_frustration"] = ex
-                st.rerun()
-    if st.button("Run Loop Diagnostic", type="primary", use_container_width=True, key="run_diag"):
-        if not frustration or len(frustration.strip()) < 15:
-            st.error("Enter at least 15 characters.")
-            return
-        st.session_state["lb_frustration"] = frustration.strip()
-        api_key = get_secret("GROQ_API_KEY")
-        with st.spinner("Diagnosing…"):
-            try:
-                d = (
-                    classify_loop_groq(frustration.strip(), api_key)
-                    if api_key
-                    else classify_loop_keyword(frustration.strip())
-                )
-            except Exception as exc:
-                st.warning(f"Fallback: {exc}")
-                d = classify_loop_keyword(frustration.strip())
-        st.session_state["lb_diagnosis"] = d
-        st.session_state["lb_step"] = "diagnostic"
-        st.rerun()
-    if st.button("Close panel", type="secondary", use_container_width=True, key="close_panel"):
-        st.session_state["lb_panel"] = False
-        st.session_state["lb_step"] = "entry"
-        st.rerun()
-
-
-def render_panel_diagnostic() -> None:
-    render_demo_guide()
-    d = st.session_state["lb_diagnosis"]
-    lt = d["loop_type"]
-    label = LOOP_LABELS[lt]
-    st.markdown(
-        f"""
-        <div class="loop-pill">{label}</div>
-        <p class="panel-title">Loop Diagnostic</p>
-        <p class="panel-sub">{d.get("diagnosis_summary", LOOP_DESCRIPTIONS[lt])}</p>
-        <p class="panel-sub"><strong style="color:#1db954">Intervention:</strong>
-        {d.get("intervention_preview", INTERVENTIONS[lt])}</p>
-        """,
-        unsafe_allow_html=True,
-    )
-    mood = st.selectbox(
-        "Mood",
-        ["Calm / low energy", "Energetic", "Melancholy", "Focused", "Open to anything"],
-        index=4,
-        label_visibility="collapsed",
-    )
-    openness = st.select_slider(
-        "Novelty",
-        [
-            "Stay close to my taste",
-            "Nudge me slightly outside my comfort zone",
-            "Surprise me — break the loop completely",
-        ],
-        value=st.session_state["lb_openness"],
-        label_visibility="collapsed",
-    )
-    if st.button("Get 3 Loop Break picks", type="primary", use_container_width=True, key="get_picks"):
-        st.session_state["lb_openness"] = openness
-        api_key = get_secret("GROQ_API_KEY")
-        with st.spinner("Building picks…"):
-            try:
-                recs = (
-                    generate_loop_break_groq(lt, st.session_state["lb_frustration"], mood, openness, api_key)
-                    if api_key
-                    else generate_loop_break_keyword(lt, st.session_state["lb_frustration"], mood, openness)
-                )
-            except Exception as exc:
-                st.warning(f"Fallback: {exc}")
-                recs = generate_loop_break_keyword(lt, st.session_state["lb_frustration"], mood, openness)
-        st.session_state["lb_recommendations"] = recs
-        st.session_state["lb_step"] = "results"
-        st.rerun()
-    if st.button("← Back", type="secondary", use_container_width=True, key="diag_back"):
-        st.session_state["lb_step"] = "entry"
-        st.rerun()
-
-
-def render_panel_results() -> None:
-    render_demo_guide()
-    d = st.session_state["lb_diagnosis"]
-    recs = st.session_state["lb_recommendations"]
-    label = LOOP_LABELS[d["loop_type"]]
-    picks = ""
-    for i, t in enumerate(recs.get("tracks", [])[:3], 1):
-        picks += f"""
-        <div class="pick-row">
-          <p class="t">{i}. {t.get("song","")}</p>
-          <p class="a">{t.get("artist","")}</p>
-          <p class="w"><em>Why it fits:</em> {t.get("why_fit","")}</p>
-          <p class="w"><em>Not last DW:</em> {t.get("novelty_rationale","")}</p>
-        </div>"""
-    st.markdown(
-        f"""
-        <div class="loop-pill">{label} reset</div>
-        <p class="panel-title">{recs.get("intervention_headline", "Your Loop Break")}</p>
-        <p class="panel-sub">{recs.get("loop_break_message", "")}</p>
-        {picks}
-        """,
-        unsafe_allow_html=True,
-    )
-    for t in recs.get("tracks", [])[:3]:
-        st.link_button(
-            f"▶  {t.get('song','')} — {t.get('artist','')}",
-            spotify_search_url(t.get("artist", ""), t.get("song", "")),
-            use_container_width=True,
+    if step == "entry":
+        hint("<b>Step 3:</b> Describe DW frustration → <b>Run Loop Diagnostic</b>.")
+        st.markdown(
+            '<div class="loop-box"><h2>Loop Break</h2><p>AI reset when Discover Weekly stops feeling new.</p></div>',
+            unsafe_allow_html=True,
         )
-    trust = st.slider("Trust vs last DW", 1, 5, 4, label_visibility="collapsed")
-    st.caption(f"Trust score: **{trust}/5**")
-    if st.button("Done", type="primary", use_container_width=True, key="done_btn"):
-        st.session_state["lb_trust_score"] = trust
-        st.session_state["lb_panel"] = False
-        st.session_state["lb_step"] = "entry"
-        st.session_state["lb_frustration"] = ""
-        st.session_state["lb_diagnosis"] = None
-        st.session_state["lb_recommendations"] = None
-        st.rerun()
+        if st.button("← Back to Discover Weekly", key="lb_back_dw"):
+            st.session_state["view"] = "dw"
+            st.rerun()
 
+        text = st.text_area(
+            "msg",
+            value=st.session_state["frustration"],
+            height=100,
+            placeholder="What felt off about this week's Discover Weekly?",
+            label_visibility="collapsed",
+        )
+        for i, ex in enumerate(EXAMPLES):
+            if st.button(ex[:50] + "…", key=f"ex{i}"):
+                st.session_state["frustration"] = ex
+                st.rerun()
+        if st.button("Run Loop Diagnostic", type="primary", key="diag"):
+            if len(text.strip()) < 15:
+                st.error("Enter at least 15 characters.")
+                return
+            st.session_state["frustration"] = text.strip()
+            key = get_secret("GROQ_API_KEY")
+            with st.spinner("Analyzing…"):
+                try:
+                    d = classify_loop_groq(text.strip(), key) if key else classify_loop_keyword(text.strip())
+                except Exception:
+                    d = classify_loop_keyword(text.strip())
+            st.session_state["diagnosis"] = d
+            st.session_state["step"] = "diagnostic"
+            st.rerun()
 
-def render_grader_sidebar() -> None:
-    with st.sidebar:
-        st.markdown("### Demo controls")
-        st.caption("Use these if the main UI is confusing")
-        if st.button("① Go to Home", use_container_width=True):
-            st.session_state["lb_screen"] = "home"
-            st.session_state["lb_panel"] = False
-            st.session_state["lb_step"] = "entry"
+    elif step == "diagnostic":
+        hint("<b>Step 3b:</b> Review loop type → <b>Get 3 Loop Break picks</b>.")
+        d = st.session_state["diagnosis"]
+        lt = d["loop_type"]
+        st.markdown(
+            f"""
+            <div class="loop-box">
+              <span class="pill">{LOOP_LABELS[lt]}</span>
+              <h2>Loop Diagnostic</h2>
+              <p>{d.get("diagnosis_summary", LOOP_DESCRIPTIONS[lt])}</p>
+              <p><b style="color:#1db954">Intervention:</b> {d.get("intervention_preview", INTERVENTIONS[lt])}</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        mood = st.selectbox("mood", ["Calm", "Energetic", "Melancholy", "Focused", "Open to anything"], index=4, label_visibility="collapsed")
+        openness = st.select_slider(
+            "nov",
+            ["Stay close", "Nudge outside comfort zone", "Surprise me completely"],
+            value="Nudge outside comfort zone",
+            label_visibility="collapsed",
+        )
+        if st.button("Get 3 Loop Break picks", type="primary", key="picks"):
+            key = get_secret("GROQ_API_KEY")
+            with st.spinner("Building picks…"):
+                try:
+                    r = (
+                        generate_loop_break_groq(lt, st.session_state["frustration"], mood, openness, key)
+                        if key
+                        else generate_loop_break_keyword(lt, st.session_state["frustration"], mood, openness)
+                    )
+                except Exception:
+                    r = generate_loop_break_keyword(lt, st.session_state["frustration"], mood, openness)
+            st.session_state["recs"] = r
+            st.session_state["step"] = "results"
             st.rerun()
-        if st.button("② Go to Discover Weekly", use_container_width=True):
-            st.session_state["lb_screen"] = "dw"
-            st.session_state["lb_panel"] = False
+        if st.button("← Back", key="diag_back"):
+            st.session_state["step"] = "entry"
             st.rerun()
-        if st.button("③ Open Loop Break panel", use_container_width=True):
-            st.session_state["lb_screen"] = "dw"
-            st.session_state["lb_panel"] = True
-            st.session_state["lb_step"] = "entry"
-            st.rerun()
-        st.markdown("---")
-        st.caption("Spotify web UI · Loop Break in right panel")
-        if get_secret("GROQ_API_KEY"):
-            st.success("Groq connected")
-        else:
-            st.warning("No API key")
-        with st.expander("Why AI?"):
-            st.caption(
-                "Recsys can't diagnose why DW failed. AI classifies loop type, "
-                "matches intervention, explains 3 picks. Same UI — new in-product moment."
+
+    else:
+        hint("<b>Step 4:</b> Review 3 explained picks → rate trust → Done.")
+        d = st.session_state["diagnosis"]
+        r = st.session_state["recs"]
+        lt = LOOP_LABELS[d["loop_type"]]
+        picks = ""
+        for i, t in enumerate(r.get("tracks", [])[:3], 1):
+            picks += f"""
+            <div class="pick">
+              <p class="s">{i}. {t.get('song','')}</p>
+              <p class="ar">{t.get('artist','')}</p>
+              <p class="w"><em>Why it fits:</em> {t.get('why_fit','')}</p>
+              <p class="w"><em>Not last DW:</em> {t.get('novelty_rationale','')}</p>
+            </div>"""
+        st.markdown(
+            f"""
+            <div class="loop-box">
+              <span class="pill">{lt} reset</span>
+              <h2>{r.get('intervention_headline', 'Your Loop Break')}</h2>
+              <p>{r.get('loop_break_message', '')}</p>
+            </div>
+            {picks}
+            """,
+            unsafe_allow_html=True,
+        )
+        for t in r.get("tracks", [])[:3]:
+            st.link_button(
+                f"▶ {t.get('song','')} — {t.get('artist','')}",
+                spotify_search_url(t.get("artist", ""), t.get("song", "")),
+                use_container_width=True,
             )
-        if st.session_state.get("lb_trust_score"):
-            st.metric("Trust", f"{st.session_state['lb_trust_score']}/5")
-        if st.button("Reset demo"):
-            for k in list(st.session_state.keys()):
-                del st.session_state[k]
+        trust = st.slider("trust", 1, 5, 4, label_visibility="collapsed")
+        st.caption(f"Trust vs last Discover Weekly: **{trust}/5**")
+        if st.button("Done — back to Home", type="primary", key="done"):
+            st.session_state["view"] = "home"
+            st.session_state["step"] = "entry"
+            st.session_state["frustration"] = ""
+            st.session_state["diagnosis"] = None
+            st.session_state["recs"] = None
             st.rerun()
 
 
 def main() -> None:
-    st.set_page_config(page_title="Spotify", page_icon="🎵", layout="wide", initial_sidebar_state="expanded")
-    st.markdown(SPOTIFY_CSS, unsafe_allow_html=True)
-    init_session()
-    render_grader_sidebar()
+    st.set_page_config(page_title="Spotify — Web Player", layout="wide")
+    st.markdown(CSS, unsafe_allow_html=True)
+    init()
+    chrome(st.session_state["view"])
 
-    screen = st.session_state["lb_screen"]
-    panel = st.session_state["lb_panel"]
-    render_chrome(screen)
+    st.markdown('<div class="nav-row">', unsafe_allow_html=True)
+    nav_buttons()
+    st.markdown("</div>", unsafe_allow_html=True)
 
-    if panel:
-        left, right = st.columns([1.5, 1], gap="medium")
-        with left:
-            render_dw_playlist(compact=True)
-        with right:
-            st.markdown('<p style="color:#fff;font-weight:700;font-size:1rem;margin:0 0 0.5rem">Loop Break</p>', unsafe_allow_html=True)
-            step = st.session_state["lb_step"]
-            if step == "entry":
-                render_panel_entry()
-            elif step == "diagnostic":
-                render_panel_diagnostic()
-            else:
-                render_panel_results()
+    view = st.session_state["view"]
+    if view == "home":
+        page_home()
+    elif view == "dw":
+        page_dw()
     else:
-        if screen == "home":
-            render_home()
-        else:
-            render_dw_playlist()
-
-    st.markdown(
-        '<p style="text-align:center;color:#535353;font-size:0.68rem;margin-top:1rem">'
-        "Fellowship prototype — not affiliated with Spotify AB</p>",
-        unsafe_allow_html=True,
-    )
+        page_loop()
 
 
 if __name__ == "__main__":
