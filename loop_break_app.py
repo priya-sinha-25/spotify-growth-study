@@ -35,10 +35,8 @@ SPOTIFY_CSS = """
         max-width: 100% !important;
         margin-left: 0 !important;
         margin-right: 0 !important;
-    }
-
-  .main.lb-panel-open .block-container {
-        padding-right: 26rem !important;
+        position: relative !important;
+        z-index: 100 !important;
     }
 
     section[data-testid="stSidebar"] {
@@ -48,9 +46,10 @@ SPOTIFY_CSS = """
 
     .spotify-topbar {
         position: fixed; top: 0; left: 0; right: 0; height: 56px;
-        background: #000; z-index: 1000;
+        background: #000; z-index: 50;
         display: flex; align-items: center; gap: 1rem;
         padding: 0 1.25rem; border-bottom: 1px solid #1a1a1a;
+        pointer-events: none;
     }
 
     .spotify-topbar .logo { display: flex; align-items: center; flex-shrink: 0; }
@@ -86,8 +85,9 @@ SPOTIFY_CSS = """
     .spotify-lib-sidebar {
         position: fixed; top: 56px; left: 0; bottom: 0; width: 21rem;
         background: #000; border-right: 1px solid #1a1a1a;
-        z-index: 999; padding: 0.5rem 0.75rem;
+        z-index: 50; padding: 0.5rem 0.75rem;
         display: flex; flex-direction: column;
+        pointer-events: none;
     }
 
     .lib-header {
@@ -129,11 +129,25 @@ SPOTIFY_CSS = """
         font-size: 0.62rem; color: #6a6a6a; line-height: 1.6;
     }
 
-    .loop-panel-fixed {
-        position: fixed; top: 56px; right: 0; bottom: 0; width: 25rem;
-        background: #121212; border-left: 1px solid #282828;
-        z-index: 998; overflow-y: auto; padding: 1.25rem;
+    .loop-panel-box {
+        background: #121212;
+        border: 1px solid #282828;
+        border-radius: 8px;
+        padding: 1rem 1.1rem;
+        margin-top: 0.5rem;
     }
+
+    .demo-guide {
+        background: #1a472a;
+        border: 1px solid #1db954;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        margin-bottom: 1rem;
+    }
+    .demo-guide strong { color: #1db954; }
+    .demo-guide p { color: #fff; font-size: 0.88rem; margin: 0.25rem 0 0; line-height: 1.4; }
+
+    .action-row { margin-bottom: 1rem; }
 
     .main-gradient {
         background: linear-gradient(180deg, #1f1f1f 0%, #121212 320px, #121212 100%);
@@ -301,6 +315,29 @@ def init_session() -> None:
             st.session_state[key] = value
 
 
+def get_demo_hint() -> tuple[str, str]:
+    screen = st.session_state["lb_screen"]
+    panel = st.session_state["lb_panel"]
+    step = st.session_state["lb_step"]
+    if screen == "home":
+        return "Step 1 of 4", "You are on Spotify Home. Click the green button below: **Open Discover Weekly**."
+    if screen == "dw" and not panel:
+        return "Step 2 of 4", "Discover Weekly playlist. Click **Break the loop** to open Loop Break (right panel)."
+    if step == "entry":
+        return "Step 3 of 4", "Describe what felt wrong → click an example or type → **Run Loop Diagnostic**."
+    if step == "diagnostic":
+        return "Step 3 of 4", "Review your loop type. Set mood/novelty → **Get 3 Loop Break picks**."
+    return "Step 4 of 4", "Review 3 explained picks → rate trust → click **Done**."
+
+
+def render_demo_guide() -> None:
+    label, hint = get_demo_hint()
+    st.markdown(
+        f'<div class="demo-guide"><strong>{label} — Demo guide</strong><p>{hint}</p></div>',
+        unsafe_allow_html=True,
+    )
+
+
 def render_chrome(screen: str) -> None:
     home_active = screen == "home"
     dw_active = screen == "dw"
@@ -345,6 +382,11 @@ def render_chrome(screen: str) -> None:
 
 
 def render_home() -> None:
+    render_demo_guide()
+    if st.button("▶  Open Discover Weekly", type="primary", key="open_dw", use_container_width=True):
+        st.session_state["lb_screen"] = "dw"
+        st.rerun()
+
     trending = ""
     for title, artist, alt in TRENDING:
         trending += f"""
@@ -381,14 +423,15 @@ def render_home() -> None:
         """,
         unsafe_allow_html=True,
     )
-    if st.button("Open Discover Weekly", type="primary", key="open_dw"):
-        st.session_state["lb_screen"] = "dw"
-        st.rerun()
 
 
-def render_dw_playlist() -> None:
+def render_dw_playlist(compact: bool = False) -> None:
+    if not compact:
+        render_demo_guide()
+
+    tracks = DW_TRACKS[:4] if compact else DW_TRACKS
     rows = ""
-    for i, (song, artist, album, dur, in_lib) in enumerate(DW_TRACKS, start=1):
+    for i, (song, artist, album, dur, in_lib) in enumerate(tracks, start=1):
         tag = '<span class="lib-tag">In your library</span>' if in_lib else ""
         rows += f"""
         <tr>
@@ -426,24 +469,29 @@ def render_dw_playlist() -> None:
         unsafe_allow_html=True,
     )
 
-    if not st.session_state["lb_panel"]:
-        if st.button("Break the loop", type="primary", key="break_loop_btn"):
-            st.session_state["lb_panel"] = True
-            st.session_state["lb_step"] = "entry"
-            st.rerun()
-    if st.button("← Back to Home", type="secondary", key="dw_back_home"):
-        st.session_state["lb_screen"] = "home"
-        st.session_state["lb_panel"] = False
-        st.rerun()
+    if not compact:
+        c1, c2 = st.columns(2)
+        with c1:
+            if not st.session_state["lb_panel"]:
+                if st.button("▶  Break the loop", type="primary", key="break_loop_btn", use_container_width=True):
+                    st.session_state["lb_panel"] = True
+                    st.session_state["lb_step"] = "entry"
+                    st.rerun()
+        with c2:
+            if st.button("← Back to Home", type="secondary", key="dw_back_home", use_container_width=True):
+                st.session_state["lb_screen"] = "home"
+                st.session_state["lb_panel"] = False
+                st.rerun()
 
 
 def render_panel_entry() -> None:
+    render_demo_guide()
     st.markdown(
         """
-        <div class="panel-handle"></div>
-        <p class="panel-title">Loop Break</p>
-        <p class="panel-sub">In-product AI reset when Discover Weekly stops feeling new.
-        Describe what went wrong — we diagnose your loop type.</p>
+        <div class="loop-panel-box">
+          <p class="panel-title">Loop Break</p>
+          <p class="panel-sub">Describe what went wrong with Discover Weekly.</p>
+        </div>
         """,
         unsafe_allow_html=True,
     )
@@ -453,12 +501,17 @@ def render_panel_entry() -> None:
         height=88,
         placeholder="What felt off about this week's Discover Weekly?",
         label_visibility="collapsed",
+        key="frustration_input",
     )
+    st.caption("Quick fill:")
+    c1, c2 = st.columns(2)
     for i, ex in enumerate(EXAMPLE_PROMPTS[:2]):
-        if st.button(ex[:44] + "…", key=f"pex_{i}"):
-            st.session_state["lb_frustration"] = ex
-            st.rerun()
-    if st.button("Run Loop Diagnostic", type="primary", use_container_width=True):
+        col = c1 if i == 0 else c2
+        with col:
+            if st.button(ex[:36] + "…", key=f"pex_{i}"):
+                st.session_state["lb_frustration"] = ex
+                st.rerun()
+    if st.button("Run Loop Diagnostic", type="primary", use_container_width=True, key="run_diag"):
         if not frustration or len(frustration.strip()) < 15:
             st.error("Enter at least 15 characters.")
             return
@@ -477,13 +530,14 @@ def render_panel_entry() -> None:
         st.session_state["lb_diagnosis"] = d
         st.session_state["lb_step"] = "diagnostic"
         st.rerun()
-    if st.button("Close", type="secondary", use_container_width=True):
+    if st.button("Close panel", type="secondary", use_container_width=True, key="close_panel"):
         st.session_state["lb_panel"] = False
         st.session_state["lb_step"] = "entry"
         st.rerun()
 
 
 def render_panel_diagnostic() -> None:
+    render_demo_guide()
     d = st.session_state["lb_diagnosis"]
     lt = d["loop_type"]
     label = LOOP_LABELS[lt]
@@ -513,7 +567,7 @@ def render_panel_diagnostic() -> None:
         value=st.session_state["lb_openness"],
         label_visibility="collapsed",
     )
-    if st.button("Get 3 Loop Break picks", type="primary", use_container_width=True):
+    if st.button("Get 3 Loop Break picks", type="primary", use_container_width=True, key="get_picks"):
         st.session_state["lb_openness"] = openness
         api_key = get_secret("GROQ_API_KEY")
         with st.spinner("Building picks…"):
@@ -529,12 +583,13 @@ def render_panel_diagnostic() -> None:
         st.session_state["lb_recommendations"] = recs
         st.session_state["lb_step"] = "results"
         st.rerun()
-    if st.button("← Back", type="secondary", use_container_width=True):
+    if st.button("← Back", type="secondary", use_container_width=True, key="diag_back"):
         st.session_state["lb_step"] = "entry"
         st.rerun()
 
 
 def render_panel_results() -> None:
+    render_demo_guide()
     d = st.session_state["lb_diagnosis"]
     recs = st.session_state["lb_recommendations"]
     label = LOOP_LABELS[d["loop_type"]]
@@ -564,7 +619,7 @@ def render_panel_results() -> None:
         )
     trust = st.slider("Trust vs last DW", 1, 5, 4, label_visibility="collapsed")
     st.caption(f"Trust score: **{trust}/5**")
-    if st.button("Done", type="primary", use_container_width=True):
+    if st.button("Done", type="primary", use_container_width=True, key="done_btn"):
         st.session_state["lb_trust_score"] = trust
         st.session_state["lb_panel"] = False
         st.session_state["lb_step"] = "entry"
@@ -576,7 +631,23 @@ def render_panel_results() -> None:
 
 def render_grader_sidebar() -> None:
     with st.sidebar:
-        st.markdown("### Demo")
+        st.markdown("### Demo controls")
+        st.caption("Use these if the main UI is confusing")
+        if st.button("① Go to Home", use_container_width=True):
+            st.session_state["lb_screen"] = "home"
+            st.session_state["lb_panel"] = False
+            st.session_state["lb_step"] = "entry"
+            st.rerun()
+        if st.button("② Go to Discover Weekly", use_container_width=True):
+            st.session_state["lb_screen"] = "dw"
+            st.session_state["lb_panel"] = False
+            st.rerun()
+        if st.button("③ Open Loop Break panel", use_container_width=True):
+            st.session_state["lb_screen"] = "dw"
+            st.session_state["lb_panel"] = True
+            st.session_state["lb_step"] = "entry"
+            st.rerun()
+        st.markdown("---")
         st.caption("Spotify web UI · Loop Break in right panel")
         if get_secret("GROQ_API_KEY"):
             st.success("Groq connected")
@@ -606,34 +677,11 @@ def main() -> None:
     render_chrome(screen)
 
     if panel:
-        st.markdown(
-            """
-            <style>
-            .main .block-container { padding-right: 26rem !important; }
-            div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:last-child {
-                position: fixed !important;
-                top: 56px !important;
-                right: 0 !important;
-                width: 25rem !important;
-                max-width: 34vw !important;
-                height: calc(100vh - 56px) !important;
-                background: #121212 !important;
-                border-left: 1px solid #282828 !important;
-                padding: 1.25rem 1.25rem 2rem !important;
-                overflow-y: auto !important;
-                z-index: 997 !important;
-            }
-            div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:last-child > div {
-                background: transparent !important;
-            }
-            </style>
-            """,
-            unsafe_allow_html=True,
-        )
-        left, right = st.columns([1.6, 1], gap="medium")
+        left, right = st.columns([1.5, 1], gap="medium")
         with left:
-            render_dw_playlist()
+            render_dw_playlist(compact=True)
         with right:
+            st.markdown('<p style="color:#fff;font-weight:700;font-size:1rem;margin:0 0 0.5rem">Loop Break</p>', unsafe_allow_html=True)
             step = st.session_state["lb_step"]
             if step == "entry":
                 render_panel_entry()
