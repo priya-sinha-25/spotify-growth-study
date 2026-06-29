@@ -62,7 +62,9 @@
 - "Superuser ContributionArtists Wanted Edition 19: Share music - discover music - like music"
 
 ## Recommended Focus Segment
-**Premium listeners who rely on algorithmic discovery but feel recommendations have become repetitive and genre-locked.**
+**Discover Weekly Staleness Trapped listeners** — users who still open Discover Weekly expecting new music, but repeatedly encounter library/recycled tracks and retreat to saved playlists when disappointed.
+
+See `part3_problem_and_solution.md` for full problem definition, metrics, competitive analysis, and differentiated MVP (**Loop Break**).
 
 ## Next Step
-Validate these AI-generated themes through 5-6 user interviews (Part 2).
+Build and deploy Loop Break MVP (Part 4) on Streamlit; validate with survey + review insights.

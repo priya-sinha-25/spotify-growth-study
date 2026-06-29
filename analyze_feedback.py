@@ -263,6 +263,38 @@ def classify_with_openai(text: str, source: str, client) -> dict:
     return result
 
 
+def analyze_dataframe(df: pd.DataFrame, analyzer) -> pd.DataFrame:
+    """Analyze each row with analyzer(text, source) -> dict."""
+    analyzed_rows = []
+    for _, row in df.iterrows():
+        text = str(row["text"]).strip()
+        source = str(row.get("source", "Other")).strip()
+        if not text:
+            continue
+
+        try:
+            analysis = analyzer(text, source)
+        except Exception:
+            analysis = classify_with_keywords(text)
+
+        analyzed_rows.append(
+            {
+                "text": text,
+                "source": source,
+                "primary_theme": analysis.get("primary_theme", "other"),
+                "discovery_related": analysis.get("discovery_related", False),
+                "frustration_summary": analysis.get("frustration_summary", ""),
+                "user_segment": analysis.get("user_segment", "unknown"),
+                "desired_behavior": analysis.get("desired_behavior", ""),
+                "key_insight": analysis.get("key_insight", ""),
+                "quote_worthy": analysis.get("quote_worthy", False),
+                "analysis_method": analysis.get("analysis_method", "unknown"),
+            }
+        )
+
+    return pd.DataFrame(analyzed_rows)
+
+
 def analyze_reviews(df: pd.DataFrame) -> pd.DataFrame:
     api_key = os.getenv("OPENAI_API_KEY")
     client = None
