@@ -667,7 +667,7 @@ def render_grader_sidebar() -> None:
 
 
 def main() -> None:
-    st.set_page_config(page_title="Spotify", page_icon="🎵", layout="wide", initial_sidebar_state="collapsed")
+    st.set_page_config(page_title="Spotify", page_icon="🎵", layout="wide", initial_sidebar_state="expanded")
     st.markdown(SPOTIFY_CSS, unsafe_allow_html=True)
     init_session()
     render_grader_sidebar()
