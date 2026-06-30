@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Loop Break | Spotify Diagnostic</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error-container": "#ffdad6",
+                    "inverse-on-surface": "#303030",
+                    "on-tertiary-fixed": "#1c1b1b",
+                    "surface-dim": "#131313",
+                    "surface-variant": "#353535",
+                    "primary-fixed-dim": "#53e076",
+                    "tertiary": "#c8c6c5",
+                    "on-surface-variant": "#bccbb9",
+                    "primary-fixed": "#72fe8f",
+                    "inverse-surface": "#e2e2e2",
+                    "on-tertiary-container": "#383838",
+                    "on-secondary-fixed-variant": "#474646",
+                    "outline-variant": "#3d4a3d",
+                    "surface-tint": "#53e076",
+                    "background": "#131313",
+                    "primary": "#53e076",
+                    "on-background": "#e2e2e2",
+                    "on-primary-fixed-variant": "#005320",
+                    "on-primary": "#003914",
+                    "error": "#ffb4ab",
+                    "on-secondary-container": "#bab8b7",
+                    "tertiary-container": "#a3a1a0",
+                    "on-secondary-fixed": "#1c1b1b",
+                    "surface-container-high": "#2a2a2a",
+                    "on-primary-container": "#004118",
+                    "surface-container-lowest": "#0e0e0e",
+                    "surface-container-low": "#1b1b1b",
+                    "on-surface": "#e2e2e2",
+                    "surface-container-highest": "#353535",
+                    "surface-bright": "#393939",
+                    "secondary-container": "#4a4949",
+                    "on-secondary": "#313030",
+                    "secondary": "#c8c6c5",
+                    "on-tertiary": "#313030",
+                    "secondary-fixed-dim": "#c8c6c5",
+                    "surface-container": "#1f1f1f",
+                    "surface": "#131313",
+                    "on-error": "#690005",
+                    "on-primary-fixed": "#002108",
+                    "inverse-primary": "#006e2d",
+                    "tertiary-fixed": "#e5e2e1",
+                    "primary-container": "#1db954",
+                    "secondary-fixed": "#e5e2e1",
+                    "tertiary-fixed-dim": "#c8c6c5",
+                    "outline": "#869585",
+                    "error-container": "#93000a",
+                    "on-tertiary-fixed-variant": "#474746"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "player-height": "90px",
+                    "stack-md": "16px",
+                    "stack-lg": "32px",
+                    "navbar-height": "64px",
+                    "stack-sm": "8px",
+                    "sidebar-width": "350px",
+                    "gutter": "24px"
+            },
+            "fontFamily": {
+                    "body-md": ["Plus Jakarta Sans"],
+                    "display-lg-mobile": ["Plus Jakarta Sans"],
+                    "label-sm": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "display-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "display-sm": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                    "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                    "display-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "headline-lg": ["20px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "display-sm": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #000000;
+            color: #e2e2e2;
+            overflow: hidden;
+        }
+        .main-panel-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: #353535 transparent;
+        }
+        .main-panel-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .main-panel-scroll::-webkit-scrollbar-thumb {
+            background-color: #353535;
+            border-radius: 4px;
+        }
+        .bg-gradient-spotify {
+            background: linear-gradient(180deg, #1db95433 0%, #121212 100%);
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-gutter w-full h-navbar-height bg-surface-container-lowest">
+<div class="flex items-center gap-stack-lg">
+<span class="text-display-sm font-display-sm font-black text-on-surface">Spotify</span>
+<div class="hidden md:flex items-center gap-6">
+<a class="text-on-surface-variant font-medium hover:text-on-surface transition-colors duration-200" href="#">Premium</a>
+<a class="text-on-surface-variant font-medium hover:text-on-surface transition-colors duration-200" href="#">Support</a>
+<a class="text-on-surface-variant font-medium hover:text-on-surface transition-colors duration-200" href="#">Download</a>
+</div>
+</div>
+<div class="flex items-center gap-stack-md">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-on-surface transition-colors">download_for_offline</button>
+<button class="text-on-surface-variant font-bold hover:scale-105 transition-transform px-4 py-2">Sign up</button>
+<button class="bg-on-surface text-background font-bold px-8 py-3 rounded-full hover:scale-105 active:scale-95 transition-all">Log in</button>
+</div>
+</header>
+<!-- Side Navigation Bar -->
+<aside class="fixed left-0 top-navbar-height w-sidebar-width flex flex-col p-stack-sm overflow-y-auto bg-surface-container-lowest h-[calc(100vh-navbar-height-player-height)] z-40">
+<nav class="flex flex-col gap-2 mb-stack-md">
+<a class="text-on-surface flex items-center gap-4 py-2 px-4 hover:bg-surface-container-highest rounded-lg transition-all brightness-125" href="#">
+<span class="material-symbols-outlined" data-weight="fill" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-label-md font-label-md">Home</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-4 py-2 px-4 hover:bg-surface-container-highest rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="text-label-md font-label-md">Search</span>
+</a>
+</nav>
+<div class="flex-1 bg-surface-container-low rounded-xl p-stack-md flex flex-col gap-stack-md overflow-hidden">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">library_music</span>
+<span class="text-headline-lg font-headline-lg">Your Library</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-on-surface cursor-pointer">add</span>
+</div>
+<div class="bg-surface-container-highest p-stack-md rounded-xl shadow-sm">
+<p class="font-bold text-on-surface mb-1">Create your first playlist</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant mb-stack-md">It's easy, we'll help you</p>
+<button class="bg-on-surface text-background text-label-md font-bold px-4 py-2 rounded-full hover:scale-105 transition-transform">Create playlist</button>
+</div>
+<div class="bg-surface-container-highest p-stack-md rounded-xl shadow-sm">
+<p class="font-bold text-on-surface mb-1">Browse podcasts</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant mb-stack-md">Enjoy your music</p>
+<button class="bg-on-surface text-background text-label-md font-bold px-4 py-2 rounded-full hover:scale-105 transition-transform">Browse podcasts</button>
+</div>
+</div>
+<footer class="mt-auto pt-stack-md px-4 grid grid-cols-2 gap-y-2 opacity-60">
+<a class="text-[11px] hover:underline" href="#">Legal</a>
+<a class="text-[11px] hover:underline" href="#">Privacy Center</a>
+<a class="text-[11px] hover:underline" href="#">Privacy Policy</a>
+<a class="text-[11px] hover:underline" href="#">Cookies</a>
+<a class="text-[11px] hover:underline" href="#">About Ads</a>
+<a class="text-[11px] hover:underline" href="#">Accessibility</a>
+<button class="col-span-2 flex items-center gap-1 border border-outline px-3 py-1 rounded-full w-max mt-2 hover:border-on-surface transition-colors">
+<span class="material-symbols-outlined text-sm">language</span>
+<span class="text-[11px] font-bold">English</span>
+</button>
+</footer>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-sidebar-width mt-navbar-height h-[calc(100vh-navbar-height-player-height)] overflow-y-auto main-panel-scroll bg-surface relative">
+<!-- Ambient Background Glow -->
+<div class="absolute inset-0 bg-gradient-spotify h-96 pointer-events-none"></div>
+<div class="relative z-10 px-gutter pt-8 pb-stack-lg max-w-4xl">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 mb-stack-md text-label-sm font-label-sm text-on-surface-variant">
+<a class="hover:text-on-surface transition-colors" href="#">Home</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<a class="hover:text-on-surface transition-colors" href="#">Made For You</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<a class="hover:text-on-surface transition-colors" href="#">Discover Weekly</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-on-surface">Loop Break</span>
+</nav>
+<!-- Header Section -->
+<header class="mb-stack-lg">
+<h1 class="text-display-lg font-display-lg text-on-surface mb-2">Loop Break</h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant max-w-xl">When Discover Weekly stops feeling new</p>
+</header>
+<!-- Bento Diagnostic Grid -->
+<div class="grid grid-cols-1 md:grid-cols-6 gap-6">
+<!-- Large Input Area -->
+<div class="md:col-span-6 bg-surface-container-high p-stack-lg rounded-2xl border border-transparent hover:border-outline-variant transition-all">
+<label class="block text-headline-lg font-headline-lg text-on-surface mb-4" for="diagnostic-input">Diagnostic Input</label>
+<div class="relative">
+<textarea class="w-full bg-surface-container-highest text-on-surface font-body-md p-6 rounded-xl border-none focus:ring-2 focus:ring-primary h-48 resize-none placeholder-on-surface-variant" id="diagnostic-input" placeholder="What felt off about this week's Discover Weekly?"></textarea>
+</div>
+<!-- Quick Diagnostic Chips -->
+<div class="mt-stack-md flex flex-wrap gap-stack-sm">
+<button class="bg-surface-container px-4 py-2 rounded-full border border-outline-variant hover:bg-surface-container-highest hover:text-on-surface transition-all text-label-md font-label-md text-on-surface-variant active:scale-95" onclick="fillInput(this)">
+                            Songs I already saved appeared in DW
+                        </button>
+<button class="bg-surface-container px-4 py-2 rounded-full border border-outline-variant hover:bg-surface-container-highest hover:text-on-surface transition-all text-label-md font-label-md text-on-surface-variant active:scale-95" onclick="fillInput(this)">
+                            Stuck in the same genre every week
+                        </button>
+</div>
+</div>
+<!-- Primary Actions -->
+<div class="md:col-span-6 flex flex-col md:flex-row items-center gap-stack-md mt-4">
+<button class="w-full md:w-auto bg-primary text-on-primary font-bold text-body-lg px-12 py-4 rounded-full hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/20">
+                        Run Loop Diagnostic
+                    </button>
+<button class="w-full md:w-auto bg-transparent border border-outline text-on-surface font-bold text-body-lg px-10 py-4 rounded-full hover:bg-surface-container-highest transition-all active:scale-95">
+                        Back to Discover Weekly
+                    </button>
+</div>
+<!-- Spacer/Graphic Content -->
+<div class="md:col-span-6 mt-12 flex justify-center">
+<div class="max-w-md w-full aspect-video bg-surface-container-low rounded-2xl overflow-hidden relative group">
+<div class="w-full h-full bg-cover bg-center opacity-40 group-hover:opacity-60 transition-opacity" data-alt="A cinematic 3D abstract render of flowing, ethereal green data streams being interrupted by a sharp, clean geometric fracture. The lighting is low-key with vibrant neon green accents against a deep charcoal void, representing a digital system diagnostic. Minimalist tech aesthetic with high-fidelity texture detail." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDxjRoCQCEA3U0bz_0c0llXB-QP4MWaZgZp5RS0MUxvwTg0lrOiBpMlFE48LiXHwNOdp9Q8XWx_Xm1Gk_x_DW4N_bTILiQrDPiC4qR74mSUbcRw_FyERtoB31gTJ-f74Pjk97XkWpZgZPmLJov7Mprob79NGNV7WxB96W8pedTmcrtnLDHJ6efntVI7w1fitBUNZnzjeMf8G9Tr9DHzFLh7t5vSffKGbm_5F8Ie2SJCFAH_U-GJHCp1_9khJkbGMZWiXDLMh2K9Vvq5')"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="text-center">
+<span class="material-symbols-outlined text-display-lg text-primary animate-pulse">analytics</span>
+<p class="text-label-md font-label-md mt-4 text-on-surface-variant uppercase tracking-widest">Awaiting Input...</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footnote -->
+<footer class="mt-24 text-center opacity-40">
+<p class="text-label-sm font-label-sm tracking-widest">Prototype — not affiliated with Spotify AB</p>
+</footer>
+</div>
+</main>
+<!-- Player Bar (Bottom Navigation) -->
+<footer class="fixed bottom-0 left-0 w-full z-50 h-player-height bg-surface-container-lowest border-t-2 border-primary-container shadow-lg flex justify-between items-center px-gutter">
+<!-- Now Playing Info (Mock) -->
+<div class="hidden md:flex items-center gap-4 w-1/3">
+<div class="w-14 h-14 bg-surface-container-highest rounded-lg overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Vibrant album cover art with a mix of neon green and dark indigo colors, featuring abstract geometric patterns. Dark mode Spotify aesthetic, modern and energetic music visualization." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8EasvFhdI9YZXmgODTEvwfgsV9w8kQ_iTwQPQF4DZ_YpsOpf5zzWAGIpY2jRbxLHhPI9QPA-3z-dPSJwjEA4dIvcvBj24JwGL50pMQ-XhgoAKsz14WEmqOAKF2BGHl9pqudUTGIU33xwes7kXCu0f-jIEB-_Xhe86lQGx47LOVQvNRKdQpsoZwtVZbBMcyOKO97xTFkeysEchVaaZl0GUeCyf1PsAeywXuVRhdR-scqVf8XiCthL-JSW3YgTHJH9vSjY0i7mP9RqY"/>
+</div>
+<div class="flex flex-col">
+<span class="text-body-md font-bold text-on-surface hover:underline cursor-pointer">Diagnostic Jam</span>
+<span class="text-label-sm text-on-surface-variant hover:underline cursor-pointer">Loop Breaker</span>
+</div>
+<span class="material-symbols-outlined text-primary text-xl ml-2">favorite</span>
+</div>
+<!-- Controls -->
+<div class="flex flex-col items-center gap-2 flex-1">
+<div class="flex items-center gap-stack-lg">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-on-surface transition-transform hover:scale-110 active:scale-90">shuffle</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-on-surface text-3xl transition-transform hover:scale-110 active:scale-90" data-icon="skip_previous">skip_previous</button>
+<button class="material-symbols-outlined text-on-surface text-5xl transition-transform hover:scale-110 active:scale-90" data-icon="play_circle">play_circle</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-on-surface text-3xl transition-transform hover:scale-110 active:scale-90" data-icon="skip_next">skip_next</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-on-surface transition-transform hover:scale-110 active:scale-90">repeat</button>
+</div>
+<!-- Progress Bar -->
+<div class="w-full max-w-md flex items-center gap-2">
+<span class="text-label-sm text-on-surface-variant min-w-[32px]">0:00</span>
+<div class="flex-1 h-1 bg-surface-container-highest rounded-full overflow-hidden group cursor-pointer relative">
+<div class="h-full w-1/4 bg-on-surface group-hover:bg-primary transition-colors"></div>
+</div>
+<span class="text-label-sm text-on-surface-variant min-w-[32px]">3:45</span>
+</div>
+</div>
+<!-- Secondary Controls -->
+<div class="hidden md:flex items-center justify-end gap-stack-md w-1/3">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-on-surface">mic</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-on-surface">queue_music</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-on-surface">devices</button>
+<div class="flex items-center gap-2 w-24">
+<span class="material-symbols-outlined text-on-surface-variant">volume_up</span>
+<div class="flex-1 h-1 bg-surface-container-highest rounded-full">
+<div class="h-full w-2/3 bg-on-surface hover:bg-primary"></div>
+</div>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-on-surface">open_in_full</button>
+</div>
+</footer>
+<script>
+        function fillInput(button) {
+            const textarea = document.getElementById('diagnostic-input');
+            textarea.value = button.innerText.trim();
+            textarea.focus();
+            
+            // Visual feedback
+            button.classList.add('bg-primary', 'text-on-primary');
+            setTimeout(() => {
+                button.classList.remove('bg-primary', 'text-on-primary');
+            }, 300);
+        }
+
+        // Simple interaction for nav items
+        document.querySelectorAll('aside nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelectorAll('aside nav a').forEach(l => {
+                    l.classList.remove('brightness-125', 'bg-surface-container-highest');
+                    l.querySelector('span:first-child').style.fontVariationSettings = "'FILL' 0";
+                });
+                link.classList.add('brightness-125', 'bg-surface-container-highest');
+                link.querySelector('span:first-child').style.fontVariationSettings = "'FILL' 1";
+            });
+        });
+    </script>
+</body></html>

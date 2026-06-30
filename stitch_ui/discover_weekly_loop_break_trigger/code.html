@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Spotify - Discover Weekly</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #000000;
+            color: #e2e2e2;
+            overflow: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 12px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            border: 3px solid transparent;
+            background-clip: content-box;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border: 3px solid transparent;
+            background-clip: content-box;
+        }
+        .track-row:hover .track-number { display: none; }
+        .track-row:hover .track-play { display: block; }
+        .track-play { display: none; }
+        
+        /* Animated Gradient for Discover Weekly Cover */
+        .discover-gradient {
+            background: linear-gradient(135deg, #53e076 0%, #7e42f5 100%);
+        }
+        
+        .hero-gradient-overlay {
+            background: linear-gradient(to bottom, rgba(126, 66, 245, 0.3) 0%, #131313 100%);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#ffdad6",
+                        "inverse-on-surface": "#303030",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "surface-dim": "#131313",
+                        "surface-variant": "#353535",
+                        "primary-fixed-dim": "#53e076",
+                        "tertiary": "#c8c6c5",
+                        "on-surface-variant": "#bccbb9",
+                        "primary-fixed": "#72fe8f",
+                        "inverse-surface": "#e2e2e2",
+                        "on-tertiary-container": "#383838",
+                        "on-secondary-fixed-variant": "#474646",
+                        "outline-variant": "#3d4a3d",
+                        "surface-tint": "#53e076",
+                        "background": "#131313",
+                        "primary": "#53e076",
+                        "on-background": "#e2e2e2",
+                        "on-primary-fixed-variant": "#005320",
+                        "on-primary": "#003914",
+                        "error": "#ffb4ab",
+                        "on-secondary-container": "#bab8b7",
+                        "tertiary-container": "#a3a1a0",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "surface-container-high": "#2a2a2a",
+                        "on-primary-container": "#004118",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-container-low": "#1b1b1b",
+                        "on-surface": "#e2e2e2",
+                        "surface-container-highest": "#353535",
+                        "surface-bright": "#393939",
+                        "secondary-container": "#4a4949",
+                        "on-secondary": "#313030",
+                        "secondary": "#c8c6c5",
+                        "on-tertiary": "#313030",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "surface-container": "#1f1f1f",
+                        "surface": "#131313",
+                        "on-error": "#690005",
+                        "on-primary-fixed": "#002108",
+                        "inverse-primary": "#006e2d",
+                        "tertiary-fixed": "#e5e2e1",
+                        "primary-container": "#1db954",
+                        "secondary-fixed": "#e5e2e1",
+                        "tertiary-fixed-dim": "#c8c6c5",
+                        "outline": "#869585",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#474746"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "player-height": "90px",
+                        "stack-md": "16px",
+                        "stack-lg": "32px",
+                        "navbar-height": "64px",
+                        "stack-sm": "8px",
+                        "sidebar-width": "350px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "display-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "display-sm": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                        "display-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "headline-lg": ["20px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "display-sm": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="flex flex-col h-screen overflow-hidden">
+<!-- TopNavBar -->
+<nav class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-gutter w-full bg-surface-container-lowest h-navbar-height">
+<div class="flex items-center gap-4">
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-full bg-black flex items-center justify-center text-on-surface hover:opacity-80 transition-all">
+<span class="material-symbols-outlined !text-xl">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded-full bg-black flex items-center justify-center text-on-surface-variant cursor-not-allowed">
+<span class="material-symbols-outlined !text-xl">chevron_right</span>
+</button>
+</div>
+<div class="relative w-80">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant !text-lg">search</span>
+<input class="w-full bg-[#242424] border-none rounded-full py-2 pl-10 pr-4 text-on-surface placeholder-on-surface-variant focus:ring-2 focus:ring-white text-body-md font-body-md" placeholder="What do you want to play?" type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<a class="text-on-surface-variant font-medium text-label-md hover:text-on-surface transition-colors duration-200" href="#">Premium</a>
+<a class="text-on-surface-variant font-medium text-label-md hover:text-on-surface transition-colors duration-200" href="#">Support</a>
+<a class="text-on-surface-variant font-medium text-label-md hover:text-on-surface transition-colors duration-200" href="#">Download</a>
+</div>
+<div class="h-6 w-px bg-surface-variant"></div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant font-bold hover:text-on-surface transition-colors duration-200">Sign up</button>
+<button class="bg-white text-black px-8 py-3 rounded-full font-bold hover:scale-105 active:scale-95 transition-all">Log in</button>
+</div>
+</div>
+</nav>
+<div class="flex flex-1 pt-navbar-height pb-player-height">
+<!-- SideNavBar -->
+<aside class="w-sidebar-width bg-black flex flex-col p-stack-sm overflow-y-auto shrink-0">
+<div class="bg-surface-container-lowest rounded-xl p-4 flex flex-col gap-4 mb-2">
+<a class="text-on-surface flex items-center gap-4 py-2 px-4 hover:bg-surface-container-highest rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-bold">Home</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-4 py-2 px-4 hover:bg-surface-container-highest rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">search</span>
+<span class="font-bold">Search</span>
+</a>
+</div>
+<div class="bg-surface-container-lowest rounded-xl flex-1 p-4 flex flex-col overflow-hidden">
+<div class="flex items-center justify-between mb-6 px-4">
+<div class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface cursor-pointer transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">library_music</span>
+<span class="text-headline-lg font-headline-lg">Your Library</span>
+</div>
+<button class="p-2 hover:bg-surface-container-highest rounded-full transition-all">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<div class="flex flex-col gap-2 overflow-y-auto custom-scrollbar flex-1">
+<div class="p-4 bg-surface-container rounded-lg">
+<p class="font-bold mb-1">Create your first playlist</p>
+<p class="text-label-md text-on-surface-variant mb-4">It's easy, we'll help you</p>
+<button class="bg-white text-black px-4 py-1.5 rounded-full text-label-md font-bold hover:scale-105 transition-all">Create playlist</button>
+</div>
+<div class="p-4 bg-surface-container rounded-lg">
+<p class="font-bold mb-1">Browse podcasts</p>
+<p class="text-label-md text-on-surface-variant mb-4">We'll keep you updated on new episodes</p>
+<button class="bg-white text-black px-4 py-1.5 rounded-full text-label-md font-bold hover:scale-105 transition-all">Browse podcasts</button>
+</div>
+</div>
+<div class="mt-auto pt-6 flex flex-wrap gap-x-4 gap-y-2 px-4">
+<a class="text-label-sm text-on-surface-variant hover:underline" href="#">Legal</a>
+<a class="text-label-sm text-on-surface-variant hover:underline" href="#">Privacy Center</a>
+<a class="text-label-sm text-on-surface-variant hover:underline" href="#">Privacy Policy</a>
+<a class="text-label-sm text-on-surface-variant hover:underline" href="#">Cookies</a>
+<a class="text-label-sm text-on-surface-variant hover:underline" href="#">About Ads</a>
+<a class="text-label-sm text-on-surface-variant hover:underline" href="#">Accessibility</a>
+</div>
+<button class="mt-8 mx-4 border border-outline px-4 py-1.5 rounded-full flex items-center gap-2 w-fit hover:border-white transition-colors">
+<span class="material-symbols-outlined !text-lg">language</span>
+<span class="text-label-md font-bold">English</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 bg-surface relative overflow-y-auto custom-scrollbar">
+<!-- Header Section -->
+<div class="relative w-full h-[340px] flex items-end p-gutter discover-gradient">
+<div class="absolute inset-0 hero-gradient-overlay"></div>
+<div class="relative z-10 flex gap-gutter items-end">
+<div class="w-60 h-60 shadow-2xl overflow-hidden rounded-lg flex items-center justify-center discover-gradient group cursor-pointer relative">
+<!-- Cover Art Placeholder -->
+<div class="absolute inset-0 flex items-center justify-center opacity-40 group-hover:opacity-60 transition-opacity">
+<span class="material-symbols-outlined !text-9xl text-white">auto_awesome</span>
+</div>
+<div class="absolute inset-0 bg-black/10 flex flex-col items-center justify-center p-6 text-center">
+<p class="text-display-sm font-display-sm uppercase tracking-tighter leading-none opacity-80">Discover Weekly</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 mb-2">
+<span class="text-label-md font-bold uppercase tracking-wider">Playlist</span>
+<h1 class="text-display-lg font-display-lg leading-tight">Discover Weekly</h1>
+<p class="text-on-surface-variant font-body-md">Your weekly mixtape of fresh music. Enjoy new music and deep cuts picked for you. Updates every Monday.</p>
+<div class="flex items-center gap-1.5 mt-2">
+<span class="font-bold text-on-surface">Spotify</span>
+<span class="text-on-surface-variant">•</span>
+<span class="text-on-surface-variant">30 songs, about 1 hr 45 min</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Bar -->
+<div class="p-gutter flex items-center gap-8 bg-gradient-to-b from-[#00000033] to-transparent">
+<button class="w-14 h-14 bg-primary text-black rounded-full flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined !text-3xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined !text-3xl">favorite</span>
+</button>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined !text-3xl">more_horiz</span>
+</button>
+</div>
+<!-- Inline Banner -->
+<div class="px-gutter mb-8">
+<div class="bg-gradient-to-r from-[#2e1d4d] to-[#1d3d2e] rounded-xl p-6 flex items-center justify-between border border-white/5 shadow-inner">
+<div class="flex gap-6 items-center">
+<div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary">history</span>
+</div>
+<div>
+<h3 class="text-display-sm font-display-sm leading-none mb-1">This week feels familiar</h3>
+<p class="text-on-surface-variant font-body-md">3 songs already in your library. We mixed in some old favorites.</p>
+</div>
+</div>
+<button class="bg-primary hover:bg-primary-container text-black px-6 py-2.5 rounded-full font-bold text-label-md transition-all hover:scale-105">
+                        Break the loop
+                    </button>
+</div>
+</div>
+<!-- Track Table -->
+<div class="px-gutter mb-20">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="text-on-surface-variant border-b border-white/10 text-label-md font-label-md">
+<th class="py-3 px-4 font-normal w-12">#</th>
+<th class="py-3 px-2 font-normal">Title</th>
+<th class="py-3 px-2 font-normal">Album</th>
+<th class="py-3 px-2 font-normal text-right pr-8">
+<span class="material-symbols-outlined !text-lg">schedule</span>
+</th>
+</tr>
+</thead>
+<tbody class="before:block before:h-4">
+<!-- Row 1 -->
+<tr class="track-row group hover:bg-white/10 rounded-md transition-colors cursor-pointer">
+<td class="py-3 px-4 text-on-surface-variant font-medium">
+<span class="track-number">1</span>
+<span class="material-symbols-outlined track-play !text-on-surface !text-xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</td>
+<td class="py-3 px-2">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-surface-container-high rounded overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Cover art for Blinding Lights by The Weeknd, featuring a high-contrast cinematic portrait with neon red lighting in a dark modern setting. The style is sleek, nocturnal, and polished, reflecting a high-energy pop aesthetic with deep blacks and vibrant glowing accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRMlIbbWSZY5lEOPcIgCLbrgJMXp-xBZ6VB8T7-CDlmTrjJeII1xYIFXo70ESg54vy_QL7hniE3yE7O6jXa7bRpX2nEIk3blJfJtmD9XyzkWX56mGRbNEUbVCM3K2DVJBq-ZY1_qhd8xVpPuRA8GqWeDeHwlYfxaXgPRNtSW3OGtopSmzJEjIdsQkbo9KQ6uQLsD-VI8ZUQBnr7Sio6N_e6nDnxCb4pNuOH53mTu0osmSn5TQGVes3h9EmUScUPPxczN20_m56iyvY"/>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface font-body-md font-bold group-hover:text-primary transition-colors">Blinding Lights</span>
+<span class="text-label-sm text-on-surface-variant">The Weeknd</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-2 text-on-surface-variant font-body-md hover:underline">After Hours</td>
+<td class="py-3 px-2 text-on-surface-variant font-body-md text-right pr-8">3:20</td>
+</tr>
+<!-- Row 2 -->
+<tr class="track-row group hover:bg-white/10 rounded-md transition-colors cursor-pointer">
+<td class="py-3 px-4 text-on-surface-variant font-medium">
+<span class="track-number">2</span>
+<span class="material-symbols-outlined track-play !text-on-surface !text-xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</td>
+<td class="py-3 px-2">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-surface-container-high rounded overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Album cover for As It Was by Harry Styles, showcasing a minimalist and artistic composition with warm, soft lighting and a modern indie-pop aesthetic. The scene features a clean, airy room with muted pastel tones, consistent with a high-fidelity and sophisticated musical platform visual style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuACVGaYHlm7umlBiNwoSAiL2gnx4GuKBy3rVe1W8TUif_J1191SI6001s48h2sdfOyhKhP1XN9jb6Gt2aE4s-5H-2xBsiAaiNTaqzXYX2pAHphNIDf7pC7jSvW4jDlAJc8tHx9UX7v24SyoAlF5usL9lyk13wiil9oQWLi2mUcxXybrYH8fqAk6eDD3pALp0MjaYrbJv6dbjaNrMGUju82kD2GjWhSgKDDJhrIOk8ryd31WFqGQReGePsR---aZk8w_N2hjkfmIdPMt"/>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="text-on-surface font-body-md font-bold group-hover:text-primary transition-colors">As It Was</span>
+<span class="bg-surface-container-high text-[#B3B3B3] text-[10px] px-1.5 py-0.5 rounded font-bold">In your library</span>
+</div>
+<span class="text-label-sm text-on-surface-variant">Harry Styles</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-2 text-on-surface-variant font-body-md hover:underline">Harry's House</td>
+<td class="py-3 px-2 text-on-surface-variant font-body-md text-right pr-8">2:47</td>
+</tr>
+<!-- Row 3 -->
+<tr class="track-row group hover:bg-white/10 rounded-md transition-colors cursor-pointer">
+<td class="py-3 px-4 text-on-surface-variant font-medium">
+<span class="track-number">3</span>
+<span class="material-symbols-outlined track-play !text-on-surface !text-xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</td>
+<td class="py-3 px-2">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-surface-container-high rounded overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Album artwork for Flowers by Miley Cyrus, featuring a bold, empowered close-up under direct sunlight. The photography is sharp and premium, emphasizing a modern pop-rock vibe with high contrast and vibrant natural colors against a deep, dark structural background of the UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXsyNtZX5PHOQZ-9U0atodYqM8mB-IBisUjZ7JB-4dU54re3P3Aqru1Zq8YQT5CEZg7g7UFzHGmDFRZXq6mr2OyA0KGfk1wy8LfWPCd6z0ROmR-rKi1JDEo7wFXzpb5_SD7nZTqHtnRtTYfm5JQI9HB7wLhSQKKkiIijVF7tJzZf8Hrb-cQPBFJVGRCvJtkcZPcUup4jxOQgrprmI9smr8b9GSS6oA-JAvJ3tAistTVqU_imHxVxAe--ipJFHb3tZui6ATN5VZWJW2"/>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface font-body-md font-bold group-hover:text-primary transition-colors">Flowers</span>
+<span class="text-label-sm text-on-surface-variant">Miley Cyrus</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-2 text-on-surface-variant font-body-md hover:underline">Endless Summer Vacation</td>
+<td class="py-3 px-2 text-on-surface-variant font-body-md text-right pr-8">3:20</td>
+</tr>
+<!-- Row 4 -->
+<tr class="track-row group hover:bg-white/10 rounded-md transition-colors cursor-pointer">
+<td class="py-3 px-4 text-on-surface-variant font-medium">
+<span class="track-number">4</span>
+<span class="material-symbols-outlined track-play !text-on-surface !text-xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</td>
+<td class="py-3 px-2">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-surface-container-high rounded overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Vibrant album cover for Cruel Summer by Taylor Swift, styled with dreamlike, hazy lighting and soft, iridescent color palettes of pink and blue. The visual is cinematic and high-fidelity, designed to pop against the dark mode interface of a premium music discovery application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuChi0HN7FfEeurFIj93Eu9TeewisG3dpANK5FOUgrrUarYUXR335zpy-CRPSo6n114iv_Mzp8_NCAtwNgDJKMecDAMOO_jLDV3HBaLQt8sYIjiBQfCtTfNRtALh4XMecFRSESRs_lHuY8JYq1qOZUxg57VxIKHqbJcaDIGi8WpWCtK1zHEWQYqvYDKxYSNS_WTMYX5QEKGTflT0Qc-4RxHvxfbFCw72oW0LXAdppPedpEZZa2hQM6b75BQxRUmrm2JE1Dn56Y1Do41W"/>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="text-on-surface font-body-md font-bold group-hover:text-primary transition-colors">Cruel Summer</span>
+<span class="bg-surface-container-high text-[#B3B3B3] text-[10px] px-1.5 py-0.5 rounded font-bold">In your library</span>
+</div>
+<span class="text-label-sm text-on-surface-variant">Taylor Swift</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-2 text-on-surface-variant font-body-md hover:underline">Lover</td>
+<td class="py-3 px-2 text-on-surface-variant font-body-md text-right pr-8">2:58</td>
+</tr>
+<!-- Row 5 -->
+<tr class="track-row group hover:bg-white/10 rounded-md transition-colors cursor-pointer">
+<td class="py-3 px-4 text-on-surface-variant font-medium">
+<span class="track-number">5</span>
+<span class="material-symbols-outlined track-play !text-on-surface !text-xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</td>
+<td class="py-3 px-2">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-surface-container-high rounded overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Album art for Save Your Tears by The Weeknd, featuring a hyper-stylized and dramatic portrait with saturated colors and sharp, high-key studio lighting. The style is immersive and artistic, fitting the moody and cinematic aesthetic of a dark-themed high-fidelity media player." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhfpnzZqtEIi5f081QcEAkf4HV1qKpyb-BOlZsA3wyz9rGgZJIcMF8KgAimUrQKLvyKoXrMpZ8qmANjS7V2sm9atkgMiwOQ1ReqiT7AQXNaZInKpenvpMStHzCdhY6GUvqRowUIdaEMcDjB8bjh_KzhyixSke9SLPfVSC5NjAIe3v_IV9R9OzZB2VmzxyuGEGqo9xQUHP6qugpR9PEe-9BRAzllAT2HRazLsXhH-KfZL7kNnjjwNzXEtyiF0cnVpEH6IRKR4gIgF7k"/>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface font-body-md font-bold group-hover:text-primary transition-colors">Save Your Tears</span>
+<span class="text-label-sm text-on-surface-variant">The Weeknd</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-2 text-on-surface-variant font-body-md hover:underline">After Hours</td>
+<td class="py-3 px-2 text-on-surface-variant font-body-md text-right pr-8">3:35</td>
+</tr>
+<!-- Row 6 -->
+<tr class="track-row group hover:bg-white/10 rounded-md transition-colors cursor-pointer">
+<td class="py-3 px-4 text-on-surface-variant font-medium">
+<span class="track-number">6</span>
+<span class="material-symbols-outlined track-play !text-on-surface !text-xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</td>
+<td class="py-3 px-2">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-surface-container-high rounded overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Modern pop album art for Espresso by Sabrina Carpenter, featuring a trendy and high-fashion aesthetic with warm, golden-hour lighting. The scene is chic and polished, with a sophisticated color palette that complements a dark minimalist UI, evoking a sense of discovery and freshness." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAv74B022mRV7_8Z6lQHxAq6xHe7D6nTaXJHlFtjY5cB4K4imBd-B7XQFF3gTByxNfXKBZOwTHMjWPw-c2PB_2t3PucPPm6IlDBsNtLB76IxNSUO1k7fgdrd9HhnSzkT3QG05cSDk4NCRAdWbh3_68ngsdsXLT_bapc9fFVK7kdREOSMa_B2jmDgwa_-zqhj6eCHatJzgN5ibTKDj7A1e-PVSwrSmNIojnxAv8mSJuOrQOf1cElQTujBFauMSFjO0t_2CjZhZh53pFH"/>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="text-on-surface font-body-md font-bold group-hover:text-primary transition-colors">Espresso</span>
+<span class="bg-surface-container-high text-[#B3B3B3] text-[10px] px-1.5 py-0.5 rounded font-bold">In your library</span>
+</div>
+<span class="text-label-sm text-on-surface-variant">Sabrina Carpenter</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-2 text-on-surface-variant font-body-md hover:underline">Short n' Sweet</td>
+<td class="py-3 px-2 text-on-surface-variant font-body-md text-right pr-8">2:52</td>
+</tr>
+</tbody>
+</table>
+<div class="mt-12 text-center">
+<p class="text-label-sm text-on-surface-variant opacity-60 italic">Prototype — not affiliated with Spotify AB</p>
+</div>
+</div>
+</main>
+</div>
+<!-- BottomNavBar (Player Bar) -->
+<footer class="fixed bottom-0 left-0 w-full z-50 flex justify-between items-center px-gutter py-4 bg-surface-container-lowest border-t border-white/5 h-player-height">
+<!-- Currently Playing -->
+<div class="flex items-center gap-4 w-1/3">
+<div class="w-14 h-14 rounded overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Small thumbnail of the currently playing song's album art, showing a high-fidelity, vibrant image that matches the overall cinematic and modern UI theme. The lighting is focused and artistic, representing a premium listening experience." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcojf6zinrE0vgyUQhi8opommLkUSxQv_PU2J7ZNPt-D43nKU5bbli6rFCkegdh4nKMfoGUtplZRFkUWhNNenn-WWbUI-esrBHGGFWD1lTENGL7FoCqT98dnQrbCF8DXp1XmLImn6w9a2wBasHw0Bj3SVm92nQZngAgpikbvkwTm7dg-wPCnbEQYfOnmjYlTzt9pTqrwIx8XSPB-aTTeAgSeMxEptjimG3_rozH9BGjRlbzpwgI6pKoqsjQskj5uiBCG5mlHbFiyyM"/>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface font-body-md font-bold hover:underline cursor-pointer">Blinding Lights</span>
+<span class="text-label-sm text-on-surface-variant hover:underline cursor-pointer">The Weeknd</span>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors ml-2">
+<span class="material-symbols-outlined !text-xl">favorite</span>
+</button>
+</div>
+<!-- Player Controls -->
+<div class="flex flex-col items-center gap-2 w-1/3">
+<div class="flex items-center gap-6">
+<button class="text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined !text-xl">shuffle</span>
+</button>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors active:scale-90">
+<span class="material-symbols-outlined !text-2xl">skip_previous</span>
+</button>
+<button class="w-8 h-8 bg-on-surface text-black rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined !text-2xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors active:scale-90">
+<span class="material-symbols-outlined !text-2xl">skip_next</span>
+</button>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined !text-xl">repeat</span>
+</button>
+</div>
+<div class="flex items-center gap-2 w-full max-w-md">
+<span class="text-label-sm text-on-surface-variant">0:45</span>
+<div class="h-1 flex-1 bg-surface-variant rounded-full relative group cursor-pointer">
+<div class="absolute inset-0 bg-primary w-[25%] rounded-full group-hover:bg-primary-container transition-colors"></div>
+<div class="absolute left-[25%] top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow hidden group-hover:block"></div>
+</div>
+<span class="text-label-sm text-on-surface-variant">3:20</span>
+</div>
+</div>
+<!-- Volume & Extras -->
+<div class="flex items-center justify-end gap-3 w-1/3">
+<button class="text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined !text-xl">mic</span>
+</button>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined !text-xl">queue_music</span>
+</button>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined !text-xl">devices</span>
+</button>
+<div class="flex items-center gap-2 w-24 ml-2">
+<span class="material-symbols-outlined text-on-surface-variant !text-xl">volume_up</span>
+<div class="h-1 flex-1 bg-surface-variant rounded-full relative group cursor-pointer">
+<div class="absolute inset-0 bg-white w-[70%] rounded-full group-hover:bg-primary transition-colors"></div>
+</div>
+</div>
+</div>
+</footer>
+<script>
+        // Simple scroll behavior for top nav opacity
+        const mainContent = document.querySelector('main');
+        const nav = document.querySelector('nav');
+        
+        mainContent.addEventListener('scroll', () => {
+            const scrollTop = mainContent.scrollTop;
+            const opacity = Math.min(scrollTop / 200, 1);
+            nav.style.backgroundColor = `rgba(14, 14, 14, ${opacity})`;
+        });
+
+        // Hover effects on track rows
+        document.querySelectorAll('.track-row').forEach(row => {
+            row.addEventListener('click', function() {
+                const title = this.querySelector('.font-bold').innerText;
+                const artist = this.querySelector('.text-label-sm').innerText;
+                // Update player (Visual only)
+                document.querySelector('footer .font-bold').innerText = title;
+                document.querySelector('footer .text-on-surface-variant').innerText = artist;
+            });
+        });
+    </script>
+</body></html>

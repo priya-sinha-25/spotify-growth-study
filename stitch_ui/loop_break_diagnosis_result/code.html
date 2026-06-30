@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Loop Break - Spotify</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#ffdad6",
+                        "inverse-on-surface": "#303030",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "surface-dim": "#131313",
+                        "surface-variant": "#353535",
+                        "primary-fixed-dim": "#53e076",
+                        "tertiary": "#c8c6c5",
+                        "on-surface-variant": "#bccbb9",
+                        "primary-fixed": "#72fe8f",
+                        "inverse-surface": "#e2e2e2",
+                        "on-tertiary-container": "#383838",
+                        "on-secondary-fixed-variant": "#474646",
+                        "outline-variant": "#3d4a3d",
+                        "surface-tint": "#53e076",
+                        "background": "#131313",
+                        "primary": "#53e076",
+                        "on-background": "#e2e2e2",
+                        "on-primary-fixed-variant": "#005320",
+                        "on-primary": "#003914",
+                        "error": "#ffb4ab",
+                        "on-secondary-container": "#bab8b7",
+                        "tertiary-container": "#a3a1a0",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "surface-container-high": "#2a2a2a",
+                        "on-primary-container": "#004118",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-container-low": "#1b1b1b",
+                        "on-surface": "#e2e2e2",
+                        "surface-container-highest": "#353535",
+                        "surface-bright": "#393939",
+                        "secondary-container": "#4a4949",
+                        "on-secondary": "#313030",
+                        "secondary": "#c8c6c5",
+                        "on-tertiary": "#313030",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "surface-container": "#1f1f1f",
+                        "surface": "#131313",
+                        "on-error": "#690005",
+                        "on-primary-fixed": "#002108",
+                        "inverse-primary": "#006e2d",
+                        "tertiary-fixed": "#e5e2e1",
+                        "primary-container": "#1db954",
+                        "secondary-fixed": "#e5e2e1",
+                        "tertiary-fixed-dim": "#c8c6c5",
+                        "outline": "#869585",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#474746"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "player-height": "90px",
+                        "stack-md": "16px",
+                        "stack-lg": "32px",
+                        "navbar-height": "64px",
+                        "stack-sm": "8px",
+                        "sidebar-width": "350px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Plus Jakarta Sans"],
+                        "display-lg-mobile": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "display-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "display-sm": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                        "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                        "display-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "headline-lg": ["20px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "display-sm": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #000000;
+            color: #e2e2e2;
+            overflow: hidden;
+        }
+        .spotify-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .spotify-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .spotify-scroll::-webkit-scrollbar-thumb {
+            background: #ffffff33;
+            border-radius: 4px;
+        }
+        .spotify-scroll::-webkit-scrollbar-thumb:hover {
+            background: #ffffff4d;
+        }
+        .novelty-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            background: #282828;
+            outline: none;
+            border-radius: 2px;
+        }
+        .novelty-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #53e076;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: transform 0.2s;
+        }
+        .novelty-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-gutter w-full bg-surface-container-lowest h-navbar-height">
+<div class="flex items-center gap-6">
+<span class="text-display-sm font-display-sm font-black text-on-surface">Spotify</span>
+<div class="hidden md:flex items-center gap-stack-md ml-10">
+<a class="text-on-surface font-bold hover:text-on-surface transition-colors duration-200" href="#">Premium</a>
+<a class="text-on-surface-variant font-medium hover:text-on-surface transition-colors duration-200" href="#">Support</a>
+<a class="text-on-surface-variant font-medium hover:text-on-surface transition-colors duration-200" href="#">Download</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="bg-surface-variant rounded-full flex items-center px-4 py-2 w-64">
+<span class="material-symbols-outlined text-on-surface-variant mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md w-full placeholder-on-surface-variant" placeholder="Search" type="text"/>
+</div>
+<button class="text-on-surface-variant font-medium px-4 py-2 hover:text-on-surface">Sign up</button>
+<button class="bg-on-surface text-background font-bold px-8 py-2 rounded-full hover:scale-105 active:scale-95 transition-transform">Log in</button>
+</div>
+</header>
+<div class="flex pt-navbar-height h-[calc(100vh-player-height)]">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-navbar-height w-sidebar-width flex flex-col p-stack-sm overflow-y-auto h-[calc(100vh-navbar-height-player-height)] bg-surface-container-lowest">
+<nav class="flex flex-col gap-2 mb-stack-lg">
+<a class="text-on-surface flex items-center gap-4 py-2 px-4 hover:bg-surface-container-highest rounded-lg transition-all brightness-125" href="#">
+<span class="material-symbols-outlined" data-weight="fill">home</span>
+<span class="font-bold">Home</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-4 py-2 px-4 hover:bg-surface-container-highest rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-bold">Search</span>
+</a>
+</nav>
+<div class="bg-surface-container-low rounded-xl p-4 flex-1 flex flex-col">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant">library_music</span>
+<span class="text-headline-lg font-headline-lg text-on-surface">Your Library</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-on-surface cursor-pointer">add</span>
+</div>
+<div class="bg-surface-container-highest rounded-lg p-stack-md mb-4">
+<p class="font-bold text-on-surface mb-1">Enjoy your music</p>
+<p class="text-label-md font-label-md text-on-surface-variant mb-4">It's easy, we'll help you</p>
+<button class="bg-on-surface text-background px-4 py-1.5 rounded-full font-bold text-body-md hover:scale-105 transition-transform">Browse podcasts</button>
+</div>
+<div class="mt-auto grid grid-cols-2 gap-2 p-2">
+<a class="text-label-sm font-label-sm text-on-surface-variant hover:underline" href="#">Legal</a>
+<a class="text-label-sm font-label-sm text-on-surface-variant hover:underline" href="#">Privacy Center</a>
+<a class="text-label-sm font-label-sm text-on-surface-variant hover:underline" href="#">Privacy Policy</a>
+<a class="text-label-sm font-label-sm text-on-surface-variant hover:underline" href="#">Cookies</a>
+<a class="text-label-sm font-label-sm text-on-surface-variant hover:underline" href="#">About Ads</a>
+<a class="text-label-sm font-label-sm text-on-surface-variant hover:underline" href="#">Accessibility</a>
+</div>
+<button class="flex items-center gap-1 border border-outline px-3 py-1 rounded-full w-fit mt-4 hover:border-on-surface transition-colors">
+<span class="material-symbols-outlined text-sm">language</span>
+<span class="text-label-sm font-label-sm">English</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-sidebar-width flex-1 bg-surface-container-low relative spotify-scroll overflow-y-auto">
+<!-- Ambient Glow Effect -->
+<div class="absolute top-0 inset-x-0 h-96 bg-gradient-to-b from-primary/20 to-transparent opacity-50 pointer-events-none"></div>
+<div class="relative z-10 px-gutter py-stack-lg max-w-4xl mx-auto">
+<!-- Result Badge -->
+<div class="flex justify-center mb-stack-md">
+<span class="inline-flex items-center bg-primary-container text-on-primary-container px-6 py-1.5 rounded-full font-bold text-label-md uppercase tracking-widest shadow-lg shadow-primary/20 animate-pulse">
+                        Library Leak
+                    </span>
+</div>
+<!-- Main Diagnostic Card -->
+<section class="bg-surface-container-high rounded-3xl p-stack-lg border border-white/5 shadow-2xl backdrop-blur-md">
+<div class="flex flex-col items-center text-center mb-stack-lg">
+<div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">analytics</span>
+</div>
+<h1 class="text-display-md font-display-md text-on-surface mb-2">Loop Diagnostic</h1>
+<div class="h-1 w-24 bg-primary rounded-full mb-6"></div>
+<p class="text-body-lg font-body-lg text-on-surface-variant max-w-lg mb-4 leading-relaxed">
+                            Your recent listening patterns show a high density of repeat tracks from your "On Repeat" playlist. 
+                            The discovery algorithm has plateaued because the overlap between your current library and new suggestions has exceeded 85%.
+                        </p>
+<div class="bg-background/40 border border-primary/20 rounded-xl px-6 py-3 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-sm">auto_fix_high</span>
+<span class="text-primary font-bold text-body-md">Hard exclude library overlap — prioritize unheard artists</span>
+</div>
+</div>
+<!-- Selectors Area -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-lg mb-stack-lg">
+<!-- Mood Selector -->
+<div class="space-y-4">
+<label class="text-label-md font-label-md text-on-surface-variant uppercase tracking-wider">Target Mood</label>
+<div class="flex flex-wrap gap-2">
+<button class="px-4 py-2 rounded-full bg-surface-container-highest text-on-surface border border-transparent hover:border-primary/50 transition-all text-body-md font-bold">Calm</button>
+<button class="px-4 py-2 rounded-full bg-primary text-background text-body-md font-bold shadow-lg shadow-primary/30">Energetic</button>
+<button class="px-4 py-2 rounded-full bg-surface-container-highest text-on-surface border border-transparent hover:border-primary/50 transition-all text-body-md font-bold">Melancholy</button>
+<button class="px-4 py-2 rounded-full bg-surface-container-highest text-on-surface border border-transparent hover:border-primary/50 transition-all text-body-md font-bold">Focused</button>
+<button class="px-4 py-2 rounded-full bg-surface-container-highest text-on-surface border border-transparent hover:border-primary/50 transition-all text-body-md font-bold">Open to anything</button>
+</div>
+</div>
+<!-- Novelty Slider -->
+<div class="space-y-4">
+<label class="text-label-md font-label-md text-on-surface-variant uppercase tracking-wider">Novelty Threshold</label>
+<div class="px-2 pt-2">
+<input class="novelty-slider cursor-pointer" max="3" min="1" step="1" type="range" value="2"/>
+<div class="flex justify-between mt-4 text-label-sm font-label-sm text-on-surface-variant uppercase">
+<span>Stay close</span>
+<span class="text-primary font-bold">Nudge outside</span>
+<span>Surprise me</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Final Action -->
+<div class="flex flex-col items-center gap-4 border-t border-white/5 pt-stack-lg">
+<button class="group relative flex items-center justify-center gap-3 bg-primary text-background px-12 py-4 rounded-full font-bold text-body-lg hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/20">
+                            Get 3 Loop Break picks
+                            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+<p class="text-label-sm font-label-sm text-on-surface-variant opacity-60">
+                            Prototype — not affiliated with Spotify AB
+                        </p>
+</div>
+</section>
+<!-- Featured Card - Bento Style -->
+<div class="mt-stack-lg grid grid-cols-1 md:grid-cols-3 gap-stack-md">
+<div class="col-span-2 bg-surface-container-high rounded-2xl overflow-hidden group cursor-pointer">
+<div class="flex h-full">
+<div class="w-1/2 relative">
+<img class="object-cover h-full w-full" data-alt="A cinematic, high-contrast photograph of an indie music artist performing in a smoke-filled neon-lit underground club. Deep green and purple hues dominate the scene, reflecting a modern Spotify dark-mode aesthetic. High grain, low light photography with premium focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBu295hI3PS_D7a8Y7Ux2iJMNE1TOev7xgKa_Eo1UAeKwRSwnTyARl0ZLUNpbCPOlzWgRwpVHPVWTj4iDALaKiepIrVjJSnM9RAa894Rigmft4N1g2ShOCov_ywExCfll-4P6BYqANFTRJxvteqU2rrXfkVZMB7XNIQtzSljSAEiOyi8UMxdY4KFYy_e6DrYnNl1IwJ8sFdmFrj5vvbCla6MsQw_zmJIV1ql_pxvMpZMxlYiBB8tH5DiP5_ImLCow3bGRzyrU8UjL0U"/>
+<div class="absolute inset-0 bg-gradient-to-r from-transparent to-surface-container-high"></div>
+</div>
+<div class="w-1/2 p-6 flex flex-col justify-center">
+<span class="text-primary text-label-sm font-bold uppercase mb-2">Editor's Choice</span>
+<h3 class="text-headline-lg font-headline-lg mb-2">Sonic Exploration</h3>
+<p class="text-body-md text-on-surface-variant">Break your echo chamber with manually curated underground releases.</p>
+</div>
+</div>
+</div>
+<div class="bg-[#1db954] rounded-2xl p-6 flex flex-col justify-between group cursor-pointer hover:brightness-110 transition-all">
+<span class="material-symbols-outlined text-4xl text-background" style="font-variation-settings: 'FILL' 1;">speed</span>
+<div>
+<h3 class="text-headline-lg font-headline-lg text-background leading-tight mb-1">Fast Track</h3>
+<p class="text-body-md text-background/80">30-second previews of 100 new songs.</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- BottomNavBar (Player Controls) -->
+<footer class="fixed bottom-0 left-0 w-full z-50 flex justify-between items-center px-gutter py-2 bg-surface-container-lowest h-player-height border-t-2 border-primary-container shadow-lg">
+<!-- Now Playing -->
+<div class="flex items-center gap-4 w-[30%]">
+<div class="w-14 h-14 bg-surface-variant rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Abstract album artwork with vibrant swirling green and black patterns, representing energy and motion. Professional digital art with clean lines and high fidelity finish suited for a luxury music app interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyipKmEnsXXrLwQPEM9Wb2P_3DbZlylrm7IA0-0o9sa6Dioj0zRcW3HHuGzmXfeNXPQQ_yd4GaLhpinnx_6xcEMq8HvRllkBnoRg7OqhItxk1502EPqIA3h5nDE-hBsBN-wcJ4XoeTMDKEMxRdebyl5-LlJO7c-HQWO7hC4xoiupsRyn2UnaIp2GF2BRL702ldO3nPm4o7BY1M-i2q2qcjVVSepkOF4rNwT0kDHt0Pc7o3rx7ZAxehA21qhumb8kteAqSMIVyAbCDH"/>
+</div>
+<div class="overflow-hidden">
+<p class="text-body-md font-bold text-on-surface truncate">Scanning Library...</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Loop Break Active</p>
+</div>
+<span class="material-symbols-outlined text-primary text-xl cursor-pointer hover:scale-110 transition-transform">favorite</span>
+</div>
+<!-- Controls -->
+<div class="flex flex-col items-center gap-2 w-[40%]">
+<div class="flex items-center gap-6">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-on-surface cursor-pointer text-2xl">shuffle</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-on-surface cursor-pointer text-3xl">skip_previous</span>
+<div class="bg-on-surface rounded-full p-2 hover:scale-105 active:scale-95 transition-transform cursor-pointer">
+<span class="material-symbols-outlined text-background text-3xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-on-surface cursor-pointer text-3xl">skip_next</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-on-surface cursor-pointer text-2xl">repeat</span>
+</div>
+<div class="flex items-center gap-2 w-full max-w-md">
+<span class="text-label-sm font-label-sm text-on-surface-variant">0:00</span>
+<div class="flex-1 h-1 bg-surface-container-highest rounded-full relative group cursor-pointer">
+<div class="absolute left-0 top-0 bottom-0 bg-primary w-1/3 rounded-full group-hover:bg-primary-fixed"></div>
+<div class="absolute left-1/3 top-1/2 -translate-y-1/2 w-3 h-3 bg-on-surface rounded-full opacity-0 group-hover:opacity-100 shadow-md"></div>
+</div>
+<span class="text-label-sm font-label-sm text-on-surface-variant">3:45</span>
+</div>
+</div>
+<!-- Volume & Actions -->
+<div class="flex items-center justify-end gap-3 w-[30%] text-on-surface-variant">
+<span class="material-symbols-outlined hover:text-on-surface cursor-pointer">mic_external_on</span>
+<span class="material-symbols-outlined hover:text-on-surface cursor-pointer">queue_music</span>
+<span class="material-symbols-outlined hover:text-on-surface cursor-pointer">devices</span>
+<div class="flex items-center gap-2 w-32 ml-2">
+<span class="material-symbols-outlined">volume_up</span>
+<div class="flex-1 h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="bg-on-surface h-full w-3/4 hover:bg-primary transition-colors"></div>
+</div>
+</div>
+<span class="material-symbols-outlined hover:text-on-surface cursor-pointer">open_in_full</span>
+</div>
+</footer>
+<script>
+        // Simple interactions for mood selector
+        const moodButtons = document.querySelectorAll('.space-y-4 button');
+        moodButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                moodButtons.forEach(b => {
+                    b.classList.remove('bg-primary', 'text-background', 'shadow-lg', 'shadow-primary/30');
+                    b.classList.add('bg-surface-container-highest', 'text-on-surface');
+                });
+                btn.classList.add('bg-primary', 'text-background', 'shadow-lg', 'shadow-primary/30');
+                btn.classList.remove('bg-surface-container-highest', 'text-on-surface');
+            });
+        });
+
+        // Hover brightness effect for library cards
+        document.querySelectorAll('.bg-surface-container-highest').forEach(card => {
+            card.addEventListener('mouseenter', () => card.style.filter = 'brightness(1.1)');
+            card.addEventListener('mouseleave', () => card.style.filter = 'brightness(1)');
+        });
+    </script>
+</body></html>

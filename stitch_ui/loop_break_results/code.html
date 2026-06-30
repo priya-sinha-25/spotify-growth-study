@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Loop Break — Results</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #121212;
+            color: #e2e2e2;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(24, 24, 24, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .spotify-gradient {
+            background: linear-gradient(180deg, #1db95433 0%, #121212 100%);
+        }
+        .track-card:hover .play-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .star-rating input:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #53e076;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#ffdad6",
+                        "inverse-on-surface": "#303030",
+                        "surface-dim": "#131313",
+                        "surface-variant": "#353535",
+                        "primary-fixed-dim": "#53e076",
+                        "tertiary": "#c8c6c5",
+                        "on-surface-variant": "#bccbb9",
+                        "primary-fixed": "#72fe8f",
+                        "inverse-surface": "#e2e2e2",
+                        "background": "#131313",
+                        "primary": "#53e076",
+                        "on-background": "#e2e2e2",
+                        "on-primary": "#003914",
+                        "surface-container-high": "#2a2a2a",
+                        "on-primary-container": "#004118",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-container-low": "#1b1b1b",
+                        "on-surface": "#e2e2e2",
+                        "surface-container-highest": "#353535",
+                        "primary-container": "#1db954",
+                        "outline": "#869585"
+                    },
+                    "spacing": {
+                        "player-height": "90px",
+                        "navbar-height": "64px",
+                        "sidebar-width": "350px",
+                        "gutter": "24px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "stack-lg": "32px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Plus Jakarta Sans"],
+                        "display-sm": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "display-sm": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-lg": ["20px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="dark bg-background text-on-background">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-gutter w-full h-navbar-height bg-surface-container-lowest">
+<div class="flex items-center gap-4">
+<span class="text-display-sm font-display-sm font-black text-on-surface">Spotify</span>
+</div>
+<div class="hidden md:flex items-center gap-stack-lg">
+<a class="text-on-surface-variant font-medium hover:text-on-surface transition-colors duration-200 text-label-md font-label-md" href="#">Premium</a>
+<a class="text-on-surface-variant font-medium hover:text-on-surface transition-colors duration-200 text-label-md font-label-md" href="#">Support</a>
+<a class="text-on-surface-variant font-medium hover:text-on-surface transition-colors duration-200 text-label-md font-label-md" href="#">Download</a>
+</div>
+<div class="flex items-center gap-stack-md">
+<button class="text-on-surface-variant font-bold hover:text-on-surface transition-colors px-4 py-2">Sign up</button>
+<button class="bg-primary text-on-primary font-bold rounded-full px-8 py-2 hover:scale-105 active:scale-95 transition-all">Log in</button>
+</div>
+</header>
+<!-- Sidebar -->
+<aside class="fixed left-0 top-navbar-height w-sidebar-width flex flex-col p-stack-sm overflow-y-auto h-[calc(100vh-navbar-height-player-height)] bg-surface-container-lowest hidden lg:flex">
+<nav class="flex flex-col gap-2 mb-stack-lg">
+<a class="text-on-surface flex items-center gap-4 py-2 px-4 hover:bg-surface-container-highest rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-label-md font-label-md">Home</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-4 py-2 px-4 hover:bg-surface-container-highest rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="text-label-md font-label-md">Search</span>
+</a>
+</nav>
+<div class="flex-1 bg-surface-container-low rounded-xl p-stack-md">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant">library_music</span>
+<span class="text-headline-lg font-headline-lg">Your Library</span>
+</div>
+</div>
+<div class="bg-surface-container-highest rounded-lg p-4 mb-4">
+<p class="font-bold mb-1">Enjoy your music</p>
+<p class="text-label-sm font-label-sm mb-4">Discover new bridges today.</p>
+<button class="bg-white text-black text-label-md font-label-md px-4 py-2 rounded-full font-bold">Browse podcasts</button>
+</div>
+</div>
+<footer class="mt-stack-lg px-4 grid grid-cols-2 gap-2 pb-8">
+<a class="text-label-sm text-on-surface-variant hover:underline" href="#">Legal</a>
+<a class="text-label-sm text-on-surface-variant hover:underline" href="#">Privacy Center</a>
+<a class="text-label-sm text-on-surface-variant hover:underline" href="#">Privacy Policy</a>
+<a class="text-label-sm text-on-surface-variant hover:underline" href="#">Cookies</a>
+<a class="text-label-sm text-on-surface-variant hover:underline" href="#">About Ads</a>
+<a class="text-label-sm text-on-surface-variant hover:underline" href="#">Accessibility</a>
+</footer>
+</aside>
+<!-- Main Content Area -->
+<main class="lg:ml-sidebar-width pt-navbar-height pb-player-height min-h-screen spotify-gradient relative">
+
+<div class="max-w-5xl mx-auto px-gutter py-stack-lg relative z-10">
+<header class="mb-stack-lg">
+<h1 class="text-display-lg font-display-lg text-white mb-2">Your Loop Break</h1>
+<p class="text-headline-lg text-primary font-medium">Cross-genre bridge reset</p>
+</header>
+<!-- Results Section: Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+<!-- Track Card 1 -->
+<div class="group track-card glass-card rounded-xl overflow-hidden hover:bg-surface-container-highest transition-all duration-300 transform hover:-translate-y-1">
+<div class="relative aspect-square">
+<img class="w-full h-full object-cover" data-alt="Close-up high-resolution album cover art featuring surrealist digital oil painting of a neon-lit forest in deep shades of emerald green and obsidian black. The artistic style is expressive and modern, with thick textures and vibrant light-mode highlights against a cinematic dark-mode backdrop, evoking a sense of atmospheric mystery and sonic depth." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCX_KjJtEKKfUcMFueyDf5o_xuVqE-6-xfJCEgfTH4EOSZo5HGQ8Z6P6i9XzisXDObNwg_WgnUIlTwDEiPsHmoxNrtLkjXGtHxP-vk0W56MP3M5kbtOBUF2dv14tO939gO1PGexBpgSD5GEPLXyfyYh7JVrwbNr3FsDwmDdZ2S0tp--9ZgE7KzBFUfdciW6Co4Es-qeuW3YU5vDgDZ1TJaYUZwl-vMUh6h4j31EpqNpYacWRfyRL40ZZVYUQXZzke-eCTCQtinjCjj4"/>
+<div class="play-overlay absolute inset-0 bg-black/40 opacity-0 flex items-center justify-center transition-all duration-300 translate-y-4">
+<button class="bg-primary text-black w-12 h-12 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="text-body-lg font-bold text-white">Midnight Monolith</h3>
+<p class="text-label-md text-on-surface-variant">Looming Shadows</p>
+</div>
+<span class="material-symbols-outlined text-primary">brand_family</span>
+</div>
+<div class="space-y-3">
+<div>
+<p class="text-label-sm text-primary uppercase tracking-widest font-bold">Why it fits</p>
+<p class="text-body-md text-on-surface">Bridges your ambient habits with neo-soul basslines.</p>
+</div>
+<div class="pt-2 border-t border-white/10">
+<p class="text-label-sm text-on-surface-variant uppercase tracking-widest font-bold">Novel Difference</p>
+<p class="text-body-md text-on-surface-variant italic">Unlike Discover Weekly's vocal-heavy picks, this is pure textural flow.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Track Card 2 -->
+<div class="group track-card glass-card rounded-xl overflow-hidden hover:bg-surface-container-highest transition-all duration-300 transform hover:-translate-y-1">
+<div class="relative aspect-square">
+<img class="w-full h-full object-cover" data-alt="Vibrant abstract digital art for an electronic music album cover. Explosive geometric patterns in electric lime and deep charcoal burst from the center of a dark minimalist canvas. The composition uses high-contrast cinematic lighting and a sharp, modern aesthetic that feels energetic and professional, perfectly suited for a high-end music discovery platform UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIR6PshPG6WG8hhEeeHnBcgU6m4iCDDJwpjNrLcHMzARhaN_MnN6urAunTpVoeWQAhd3khgOY2OWY671wXfHcZVIX0avrK0dke15-BmaStY2NA0H0zJjEprP-4mBu65hRFOmz365M_RLg5KIiHhfAKvtrJerKCskXS2R7r8owYOSkC1Sop7jHi9nLIB4YX4Mbz0mushP8pqB47cUeEhu4xYrrr7lO4UrbW0pGbHhjCYvPQ_z_w-bld67dVXt9B32d0FnsQmib6LnVr"/>
+<div class="play-overlay absolute inset-0 bg-black/40 opacity-0 flex items-center justify-center transition-all duration-300 translate-y-4">
+<button class="bg-primary text-black w-12 h-12 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="text-body-lg font-bold text-white">Static Pulse</h3>
+<p class="text-label-md text-on-surface-variant">The Glitch Oracles</p>
+</div>
+<span class="material-symbols-outlined text-primary">bolt</span>
+</div>
+<div class="space-y-3">
+<div>
+<p class="text-label-sm text-primary uppercase tracking-widest font-bold">Why it fits</p>
+<p class="text-body-md text-on-surface">Matches the high-tempo energy of your workout history.</p>
+</div>
+<div class="pt-2 border-t border-white/10">
+<p class="text-label-sm text-on-surface-variant uppercase tracking-widest font-bold">Novel Difference</p>
+<p class="text-body-md text-on-surface-variant italic">Introduces industrial glitch elements you haven't explored yet.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Track Card 3 -->
+<div class="group track-card glass-card rounded-xl overflow-hidden hover:bg-surface-container-highest transition-all duration-300 transform hover:-translate-y-1">
+<div class="relative aspect-square">
+<img class="w-full h-full object-cover" data-alt="Sophisticated album cover photography featuring a minimalist architecture shot of a spiral staircase in monochrome with a single streak of neon green light. The mood is sleek and professional, utilizing deep shadows and crisp lines to create a premium, artistic look. The overall style is dark modernism, designed to feel immersive and high-fidelity for a music application context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9THwiLLHoMdUs96329J0kbxHM9TH17GLcgb2jXk4agPFHMI1wC43piTr2EdecEIUHaM57LX-haTybqsQz91ILtsL4vEvP7KWXhqvAf4nv_9k3HzjUmI7b9oHHGhmaLsx0-Aofvpm3zKQXEhsRymtoGJOzRvnPGi4K4UZP1Ff6Zak47BGIDmTB5lKApULMZnSNUt-4d76iATKHJMP2_KDgTi2VD8BJCm7eni4bnPM5ym9L_DZUR6DHmWEtRWDg_OGFg7bLP6D4GMPj"/>
+<div class="play-overlay absolute inset-0 bg-black/40 opacity-0 flex items-center justify-center transition-all duration-300 translate-y-4">
+<button class="bg-primary text-black w-12 h-12 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="text-body-lg font-bold text-white">Velvet Horizon</h3>
+<p class="text-label-md text-on-surface-variant">Azure Collective</p>
+</div>
+<span class="material-symbols-outlined text-primary">filter_hdr</span>
+</div>
+<div class="space-y-3">
+<div>
+<p class="text-label-sm text-primary uppercase tracking-widest font-bold">Why it fits</p>
+<p class="text-body-md text-on-surface">Syncs with your preference for expansive soundscapes.</p>
+</div>
+<div class="pt-2 border-t border-white/10">
+<p class="text-label-sm text-on-surface-variant uppercase tracking-widest font-bold">Novel Difference</p>
+<p class="text-body-md text-on-surface-variant italic">Escapes your usual indie-folk loop into cinematic synth-wave.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Feedback & Action Area -->
+<div class="flex flex-col md:flex-row items-center justify-between bg-surface-container-low p-8 rounded-2xl border border-white/5 gap-8">
+<div class="text-center md:text-left">
+<h2 class="text-headline-lg mb-2">Would you trust this more than your last Discover Weekly?</h2>
+<div class="flex items-center justify-center md:justify-start gap-4 mt-4 star-rating">
+<div class="flex flex-row-reverse gap-2">
+<input class="hidden" id="star5" name="rating" type="radio" value="5"/>
+<label class="material-symbols-outlined cursor-pointer hover:scale-125 transition-transform" for="star5" style="font-variation-settings: 'FILL' 1;">circle</label>
+<input class="hidden" id="star4" name="rating" type="radio" value="4"/>
+<label class="material-symbols-outlined cursor-pointer hover:scale-125 transition-transform" for="star4" style="font-variation-settings: 'FILL' 1;">circle</label>
+<input class="hidden" id="star3" name="rating" type="radio" value="3"/>
+<label class="material-symbols-outlined cursor-pointer hover:scale-125 transition-transform" for="star3" style="font-variation-settings: 'FILL' 1;">circle</label>
+<input class="hidden" id="star2" name="rating" type="radio" value="2"/>
+<label class="material-symbols-outlined cursor-pointer hover:scale-125 transition-transform" for="star2" style="font-variation-settings: 'FILL' 1;">circle</label>
+<input class="hidden" id="star1" name="rating" type="radio" value="1"/>
+<label class="material-symbols-outlined cursor-pointer hover:scale-125 transition-transform" for="star1" style="font-variation-settings: 'FILL' 1;">circle</label>
+</div>
+<span class="text-label-md text-on-surface-variant">(1-5 rating)</span>
+</div>
+</div>
+<button class="bg-primary text-black text-headline-lg font-bold px-12 py-4 rounded-full hover:scale-105 active:scale-95 transition-all shadow-xl whitespace-nowrap">
+                    Done
+                </button>
+</div>
+<p class="text-center mt-12 text-label-sm text-on-surface-variant opacity-50">
+                Prototype — not affiliated with Spotify AB
+            </p>
+</div>
+</main>
+<!-- Player Bar (Persistent) -->
+<footer class="fixed bottom-0 left-0 w-full h-player-height bg-surface-container-lowest z-50 flex justify-between items-center px-gutter py-2 border-t-2 border-primary-container">
+<!-- Now Playing -->
+<div class="flex items-center gap-4 w-1/3">
+<div class="w-14 h-14 bg-surface-container-highest rounded overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A minimalist, high-fidelity digital rendering of a sleek black vinyl record spinning against a dark grey background. Subtle emerald green light reflects off the grooved surface. The style is professional and modern, focusing on depth and texture for a premium music player interface component." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlzzx0JeU8aeBAM873g7qe62YbBxoeEI755dpD4oR3SL5DRxm0JRUNNuYc5h2RdTCCnJ3SBxJxrp12JEekr2sgnCfIv42xHdPri-KuZy-vqHbwpfQn5NbFjgDUp2YyGBhZ0-nDzeZ74cab33K1UeyYjd6nAImuQqM2t1szKCz9qM3-orzpBZniNsgVjlX0B42haGXSUksPP-dPwuFhFMMNjroJwnBookpUd6f8RjFjVBSdhBHfM3i3jN3MIu99I9W8KXLRwM0BGOns"/>
+</div>
+<div class="hidden sm:block">
+<p class="text-body-md font-bold text-white">Midnight Monolith</p>
+<p class="text-label-sm text-on-surface-variant">Looming Shadows</p>
+</div>
+</div>
+<!-- Controls -->
+<div class="flex flex-col items-center gap-1 w-1/3">
+<div class="flex items-center gap-stack-lg">
+<button class="text-on-surface-variant hover:text-on-surface transition-transform hover:scale-105 active:scale-90">
+<span class="material-symbols-outlined">skip_previous</span>
+</button>
+<button class="text-on-surface hover:text-on-surface transition-transform hover:scale-110 active:scale-90">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</button>
+<button class="text-on-surface-variant hover:text-on-surface transition-transform hover:scale-105 active:scale-90">
+<span class="material-symbols-outlined">skip_next</span>
+</button>
+</div>
+<div class="w-full max-w-md bg-surface-container-highest h-1 rounded-full relative overflow-hidden hidden md:block">
+<div class="absolute left-0 top-0 h-full w-1/3 bg-primary"></div>
+</div>
+</div>
+<!-- Volume/Additional -->
+<div class="flex items-center justify-end gap-stack-md w-1/3">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary">lyrics</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary">queue_music</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary">devices</span>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant">volume_up</span>
+<div class="w-24 h-1 bg-surface-container-highest rounded-full overflow-hidden hidden sm:block">
+<div class="h-full w-2/3 bg-primary"></div>
+</div>
+</div>
+</div>
+</footer>
+<script>
+        // Simple Micro-interaction for rating
+        document.querySelectorAll('.star-rating label').forEach(star => {
+            star.addEventListener('click', () => {
+                const rating = star.previousElementSibling.value;
+                console.log(`User rated: ${rating}`);
+                // In a real app, this would trigger a feedback pulse or state update
+            });
+        });
+
+        // Hover animation for buttons
+        const primaryBtn = document.querySelector('button.bg-primary');
+        primaryBtn.addEventListener('mousedown', () => {
+            primaryBtn.style.transform = 'scale(0.95)';
+        });
+        primaryBtn.addEventListener('mouseup', () => {
+            primaryBtn.style.transform = 'scale(1.05)';
+        });
+    </script>
+</body></html>

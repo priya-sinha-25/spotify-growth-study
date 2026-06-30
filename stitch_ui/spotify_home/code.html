@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Spotify - Web Player</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #000000;
+            color: #e2e2e2;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .main-view-gradient {
+            background: linear-gradient(to bottom, #1f1f1f 0%, #121212 300px);
+        }
+
+        .play-button-hover {
+            opacity: 0;
+            transform: translateY(8px);
+            transition: all 0.3s ease;
+        }
+
+        .card-hover-parent:hover .play-button-hover {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-error-container": "#ffdad6",
+                      "inverse-on-surface": "#303030",
+                      "on-tertiary-fixed": "#1c1b1b",
+                      "surface-dim": "#131313",
+                      "surface-variant": "#353535",
+                      "primary-fixed-dim": "#53e076",
+                      "tertiary": "#c8c6c5",
+                      "on-surface-variant": "#bccbb9",
+                      "primary-fixed": "#72fe8f",
+                      "inverse-surface": "#e2e2e2",
+                      "on-tertiary-container": "#383838",
+                      "on-secondary-fixed-variant": "#474646",
+                      "outline-variant": "#3d4a3d",
+                      "surface-tint": "#53e076",
+                      "background": "#131313",
+                      "primary": "#53e076",
+                      "on-background": "#e2e2e2",
+                      "on-primary-fixed-variant": "#005320",
+                      "on-primary": "#003914",
+                      "error": "#ffb4ab",
+                      "on-secondary-container": "#bab8b7",
+                      "tertiary-container": "#a3a1a0",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "surface-container-high": "#2a2a2a",
+                      "on-primary-container": "#004118",
+                      "surface-container-lowest": "#0e0e0e",
+                      "surface-container-low": "#1b1b1b",
+                      "on-surface": "#e2e2e2",
+                      "surface-container-highest": "#353535",
+                      "surface-bright": "#393939",
+                      "secondary-container": "#4a4949",
+                      "on-secondary": "#313030",
+                      "secondary": "#c8c6c5",
+                      "on-tertiary": "#313030",
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "surface-container": "#1f1f1f",
+                      "surface": "#131313",
+                      "on-error": "#690005",
+                      "on-primary-fixed": "#002108",
+                      "inverse-primary": "#006e2d",
+                      "tertiary-fixed": "#e5e2e1",
+                      "primary-container": "#1db954",
+                      "secondary-fixed": "#e5e2e1",
+                      "tertiary-fixed-dim": "#c8c6c5",
+                      "outline": "#869585",
+                      "error-container": "#93000a",
+                      "on-tertiary-fixed-variant": "#474746"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "player-height": "90px",
+                      "stack-md": "16px",
+                      "stack-lg": "32px",
+                      "navbar-height": "64px",
+                      "stack-sm": "8px",
+                      "sidebar-width": "350px",
+                      "gutter": "24px"
+              },
+              "fontFamily": {
+                      "body-md": ["Plus Jakarta Sans"],
+                      "display-lg-mobile": ["Plus Jakarta Sans"],
+                      "label-sm": ["Plus Jakarta Sans"],
+                      "display-lg": ["Plus Jakarta Sans"],
+                      "body-lg": ["Plus Jakarta Sans"],
+                      "display-md": ["Plus Jakarta Sans"],
+                      "headline-lg": ["Plus Jakarta Sans"],
+                      "label-md": ["Plus Jakarta Sans"],
+                      "display-sm": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                      "display-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                      "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "400"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                      "display-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "headline-lg": ["20px", {"lineHeight": "28px", "fontWeight": "700"}],
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "display-sm": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-surface-container-lowest text-on-surface">
+<!-- TOP NAVIGATION BAR -->
+<header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-gutter w-full h-navbar-height bg-surface-container-lowest">
+<div class="flex items-center gap-6">
+<div class="text-display-sm font-display-sm font-black text-on-surface">Spotify</div>
+<div class="hidden md:flex items-center bg-surface-container rounded-full px-4 py-2 w-96 group focus-within:ring-2 ring-on-surface">
+<span class="material-symbols-outlined text-on-surface-variant mr-3" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md w-full placeholder:text-on-surface-variant" placeholder="What do you want to play?" type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="hidden md:block text-on-surface-variant font-medium hover:text-on-surface transition-colors duration-200 cursor-pointer text-label-md font-label-md">Download</span>
+<span class="hidden md:block text-on-surface-variant font-medium hover:text-on-surface transition-colors duration-200 cursor-pointer text-label-md font-label-md">Support</span>
+<span class="hidden md:block text-on-surface-variant font-medium hover:text-on-surface transition-colors duration-200 cursor-pointer text-label-md font-label-md">Premium</span>
+<div class="h-8 w-[1px] bg-surface-variant mx-2 hidden md:block"></div>
+<button class="text-on-surface-variant font-medium hover:text-on-surface transition-colors duration-200 px-4 py-2 text-label-md font-label-md">Sign up</button>
+<button class="bg-on-surface text-surface-container-lowest font-bold px-8 py-3 rounded-full hover:scale-105 transition-transform text-label-md font-label-md">Log in</button>
+</div>
+</header>
+<div class="flex h-[calc(100vh-player-height)] mt-navbar-height overflow-hidden">
+<!-- SIDE NAVIGATION BAR -->
+<aside class="fixed left-0 top-navbar-height w-sidebar-width h-[calc(100vh-navbar-height-player-height)] flex flex-col p-stack-sm overflow-y-auto bg-surface-container-lowest">
+<nav class="bg-surface-container-low rounded-lg p-stack-sm mb-stack-sm">
+<a class="text-on-surface flex items-center gap-4 py-3 px-4 hover:bg-surface-container-highest rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-label-md font-label-md font-bold">Home</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-4 py-3 px-4 hover:bg-surface-container-highest rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="text-label-md font-label-md font-bold">Search</span>
+</a>
+</nav>
+<div class="flex-1 bg-surface-container-low rounded-lg p-stack-sm overflow-hidden flex flex-col">
+<div class="flex items-center justify-between px-4 py-2 mb-4">
+<div class="flex items-center gap-2 text-on-surface-variant hover:text-on-surface cursor-pointer transition-colors">
+<span class="material-symbols-outlined" data-icon="library_music">library_music</span>
+<span class="text-label-md font-label-md font-bold">Your Library</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-on-surface cursor-pointer" data-icon="add">add</span>
+</div>
+<div class="flex-1 overflow-y-auto">
+<div class="bg-surface-container-highest rounded-lg p-4 mb-4">
+<p class="text-on-surface font-bold text-body-md mb-1">Create your first playlist</p>
+<p class="text-on-surface-variant text-label-md mb-4">It's easy, we'll help you</p>
+<button class="bg-on-surface text-surface-container-lowest font-bold px-4 py-1.5 rounded-full text-label-md">Create playlist</button>
+</div>
+<div class="bg-surface-container-highest rounded-lg p-4">
+<p class="text-on-surface font-bold text-body-md mb-1">Let's find some podcasts to follow</p>
+<p class="text-on-surface-variant text-label-md mb-4">We'll keep you updated on new episodes</p>
+<button class="bg-on-surface text-surface-container-lowest font-bold px-4 py-1.5 rounded-full text-label-md">Browse podcasts</button>
+</div>
+</div>
+<footer class="mt-auto px-4 py-6 grid grid-cols-3 gap-y-2">
+<a class="text-[11px] text-on-surface-variant hover:underline" href="#">Legal</a>
+<a class="text-[11px] text-on-surface-variant hover:underline" href="#">Privacy Center</a>
+<a class="text-[11px] text-on-surface-variant hover:underline" href="#">Privacy Policy</a>
+<a class="text-[11px] text-on-surface-variant hover:underline" href="#">Cookies</a>
+<a class="text-[11px] text-on-surface-variant hover:underline" href="#">About Ads</a>
+<a class="text-[11px] text-on-surface-variant hover:underline" href="#">Accessibility</a>
+</footer>
+<div class="px-4 pb-4">
+<button class="flex items-center gap-1 border border-outline px-3 py-1.5 rounded-full text-on-surface font-bold text-label-md hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[18px]" data-icon="language">language</span>
+                        English
+                    </button>
+</div>
+</div>
+</aside>
+<!-- MAIN CONTENT PANEL -->
+<main class="ml-sidebar-width flex-1 bg-surface-container-low overflow-y-auto main-view-gradient m-2 rounded-lg relative">
+<div class="px-gutter pt-8 pb-12">
+<!-- Section: Trending songs -->
+<section class="mb-stack-lg">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-headline-lg font-headline-lg text-on-surface tracking-tight">Trending songs</h2>
+<a class="text-label-md font-label-md text-on-surface-variant hover:underline" href="#">Show all</a>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+<!-- Card 1 -->
+<div class="bg-surface-container-low hover:bg-surface-container-highest p-4 rounded-xl transition-all duration-300 cursor-pointer card-hover-parent relative group">
+<div class="relative aspect-square mb-4 shadow-lg overflow-hidden rounded-lg">
+<img class="w-full h-full object-cover" data-alt="Vibrant album art for a synth-wave track featuring a neon-lit futuristic city skyline with deep purples, electric blues, and sharp pink accents. The style is cinematic and high-fidelity, matching a dark modernism aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxSAai90USe03VsOAwvFaStUkcP6XIpiwuIvQop6TZlATtkvmWZ4UlXARuHu7RDMRSz1uL7OM3l3PNpWuil7QCopUwTIm6TV6uwcXQxwRvlB8sSk6IMZJ92bSLzefm99HDHbUJIQ-sevjp7M2dj8o70pf0Qf8kwsr9j3MLBbpaNNji1dRvs5r-3KCVDazLOWc2LvojxLoTFQJ9JhV_5_uTlw_f4nYbA0WhwSEWhFWAJR4mkEdICXHtcJ5zNzM7a0PXgoR6PhaNsP-T"/>
+<div class="absolute bottom-2 right-2 play-button-hover">
+<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-surface-container-lowest text-[28px]" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+<h3 class="text-body-lg font-bold text-on-surface truncate mb-1">Midnight City</h3>
+<p class="text-label-sm text-on-surface-variant truncate">M83</p>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-low hover:bg-surface-container-highest p-4 rounded-xl transition-all duration-300 cursor-pointer card-hover-parent relative group">
+<div class="relative aspect-square mb-4 shadow-lg overflow-hidden rounded-lg">
+<img class="w-full h-full object-cover" data-alt="Abstract oil painting album cover with deep crimson and obsidian textures, suggesting emotional intensity and depth. The artwork is centered in a high-contrast dark room environment with soft rim lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWjtMNAZhF0MwuxVsgZHHrdG7OE8NMgDeMDprR1BZDiqp1rcsALnEONLhYBiTRG2GgOCarZ-QRV_jsBElHBxROzwgLGn0vHyD64FvQtHoMfz-qN0TdtARroVQBFui6afnD-RqS-oH-pYNX7me9D7BLZvdOWwOFUydB50_Q_lJFkHYDvfC4e9MJo4hB8ZE3paY5DCJc2r_51LHQjZch-meegcEGcpTrbzADAs5ZLOZvj6leFHhE09jQQg_sj79K7ombFra8vZ24Mp-N"/>
+<div class="absolute bottom-2 right-2 play-button-hover">
+<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-surface-container-lowest text-[28px]" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+<h3 class="text-body-lg font-bold text-on-surface truncate mb-1">Starboy</h3>
+<p class="text-label-sm text-on-surface-variant truncate">The Weeknd</p>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-low hover:bg-surface-container-highest p-4 rounded-xl transition-all duration-300 cursor-pointer card-hover-parent relative group">
+<div class="relative aspect-square mb-4 shadow-lg overflow-hidden rounded-lg">
+<img class="w-full h-full object-cover" data-alt="Ethereal dream-pop album cover showing a soft-focus forest landscape shrouded in mist, with muted teal and grey tones. The mood is serene and atmospheric, designed for an immersive listening experience." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9DJ4BmC8enakpEK0wm5db8bkyzvMlAxCShxt2aymBIiSYoS-N5B-34hfJ1UioGALAuU0SE4qmMRY2OL816miOfTTrwavaSQ-nBwNVK6QgS-5BWhFOIS2BA0wGQ5H8iSf2PHsfym8RoBuHowKWiwDLhzeV8owvg1vl60Q3Tq_UEjFq0NEYh_cue9CiHHf-HTnkoxKzbIWgYnxOBlLEAxTq1zvbgQxDe2g0qTI6hrvyr4tgVzEEK_LSvDZbNCWYK7U8lfbly_Mo_4ok"/>
+<div class="absolute bottom-2 right-2 play-button-hover">
+<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-surface-container-lowest text-[28px]" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+<h3 class="text-body-lg font-bold text-on-surface truncate mb-1">Blonde</h3>
+<p class="text-label-sm text-on-surface-variant truncate">Frank Ocean</p>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-low hover:bg-surface-container-highest p-4 rounded-xl transition-all duration-300 cursor-pointer card-hover-parent relative group">
+<div class="relative aspect-square mb-4 shadow-lg overflow-hidden rounded-lg">
+<img class="w-full h-full object-cover" data-alt="Modern minimalist hip-hop album cover with bold yellow typography on a stark black background. High energy and professional execution, featuring sharp edges and premium layout design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnEZs2_7Gbmm7meqCTzjpLsYyjnv87cuFxNDrOl5gjPZ1ZxJUESGd4NfKowEzLjRtrKSnCG-QFpopzU_IJCx4jJubrEH8pFjhCGdaI5tGSzif_bIpz0tn5P5wVCr1hK6uDmYAf4C8hqBS_lMT61bnEfgeakOwkMmahO1KzPIPRuMtp6Ill6a7LXUv5MHhBtq1gSd2o66j6lHu7-B8syICf0F0d9fe8q6baIlQR4Qoht34YctKcegsrpa-eM01RudyZ9xEDabtZUIZH"/>
+<div class="absolute bottom-2 right-2 play-button-hover">
+<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-surface-container-lowest text-[28px]" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+<h3 class="text-body-lg font-bold text-on-surface truncate mb-1">DAMN.</h3>
+<p class="text-label-sm text-on-surface-variant truncate">Kendrick Lamar</p>
+</div>
+<!-- Card 5 -->
+<div class="bg-surface-container-low hover:bg-surface-container-highest p-4 rounded-xl transition-all duration-300 cursor-pointer card-hover-parent relative group">
+<div class="relative aspect-square mb-4 shadow-lg overflow-hidden rounded-lg">
+<img class="w-full h-full object-cover" data-alt="Conceptual indie rock album art featuring an artistic sketch of a mountain range reflected in a calm lake, with a limited palette of emerald green and silver. Cinematic and premium feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuyNPJnF5Q_DTHCH0dk2G4K4xBiIpc3-tsDDLGkpYdkkPQnnUAXa0WRTD-ApZIra3Of5lLYnVfOuH_izHfxkZTXiUWYQmmvAyuvl3eN0ud2FeJXN55SwCq7BJeetBz2UnAIFrUr7waJEDQi8nAvg5IYKzizTemOuCq8vJ4lSfCYkCOE8ynI4TnLwMjWAHa50F3fwcdMxZhDKeUD9Y6W8KlXsyJhIavTUTDZC18w-56BufZTdobjG5Y817M8OhpBrMBAFUZ7uz3ujFL"/>
+<div class="absolute bottom-2 right-2 play-button-hover">
+<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-surface-container-lowest text-[28px]" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+<h3 class="text-body-lg font-bold text-on-surface truncate mb-1">Currents</h3>
+<p class="text-label-sm text-on-surface-variant truncate">Tame Impala</p>
+</div>
+<!-- Card 6 -->
+<div class="bg-surface-container-low hover:bg-surface-container-highest p-4 rounded-xl transition-all duration-300 cursor-pointer card-hover-parent relative group">
+<div class="relative aspect-square mb-4 shadow-lg overflow-hidden rounded-lg">
+<img class="w-full h-full object-cover" data-alt="Sophisticated jazz album cover with a moody black and white portrait of a musician playing a saxophone. The lighting is low-key with high contrast, evoking a vintage high-fidelity atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB97w3R3tyGaRWQTEFRNlBTgsrMhF-kqcsfIuBWE4Iha_5-8zQ2Si7n89YUXW92uKSNW4FKM_QVft5DavCNHo0_PhVpmGnG0E99kqqFrTAuLx-E_ySb_YJ6np5wxbNaIckQfP_7Chme8-TPq-9pFH99a_jydqYA7WclsFF1zwZA9jPtSj2PIfmz3qwozI55vcDYR9URhLhwfgYTw9n52buwJBSmBCA2tIpz6EzZLJnapF22eCb9x4RKX9AJLGxTlb04FWm_eaQP5xAT"/>
+<div class="absolute bottom-2 right-2 play-button-hover">
+<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-surface-container-lowest text-[28px]" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+<h3 class="text-body-lg font-bold text-on-surface truncate mb-1">Kind of Blue</h3>
+<p class="text-label-sm text-on-surface-variant truncate">Miles Davis</p>
+</div>
+</div>
+</section>
+<!-- Section: Popular artists -->
+<section class="mb-stack-lg">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-headline-lg font-headline-lg text-on-surface tracking-tight">Popular artists</h2>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+<!-- Artist 1 -->
+<div class="hover:bg-surface-container-highest p-4 rounded-xl transition-all duration-300 cursor-pointer group">
+<div class="aspect-square mb-4 shadow-xl overflow-hidden rounded-full relative">
+<img class="w-full h-full object-cover" data-alt="High-resolution professional studio portrait of a charismatic male pop singer with sharp features and a stylish haircut. The lighting is cinematic, casting soft shadows against a dark, monochromatic backdrop." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPWcoFPkH7uI67VHcOf2IoOgEntk961R202ckV2nagdhvsiaKQcD-SGLWB-2JX6KhZ2B3rIbQ4SiDNxqweb3Cx4COACTqUTkVogfTvVFir-0p98eY2GIb9ebZ7fyke_uVZnH8IwWRHB2eS1UGmRZ_CsLzNl16kcwa6SPLX3eO03vpBMdWYxoLerhcgjbBkfgpBhJgIJXWrXJ0iwXUsfiZR7d0tsSpIqOion6FluWX_mBJQ4kiYPFrcwQTu3CJxOpgtdz1FkYeViVUe"/>
+<div class="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-xl">
+<span class="material-symbols-outlined text-surface-container-lowest" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+<h3 class="text-body-lg font-bold text-on-surface truncate">The Weeknd</h3>
+<p class="text-label-sm text-on-surface-variant">Artist</p>
+</div>
+<!-- Artist 2 -->
+<div class="hover:bg-surface-container-highest p-4 rounded-xl transition-all duration-300 cursor-pointer group">
+<div class="aspect-square mb-4 shadow-xl overflow-hidden rounded-full relative">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of a female alternative artist with a thoughtful expression. The style is artistic and high-fidelity, featuring warm golden-hour lighting that contrasts with deep shadow areas." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbMf_VLq19BJ2JlyfAFVsoLOfZtS57vy0xRZxDRCmnA5cS9UV6GfY630QJXjVhO8chCwvs1BkZX241evJl7ln_yu7wJy63fICKcCyrbRkv3gHt5K9AMOnh_paCJkFv8pAz9JJzmCyMiyer62XFvAZdRvniqZKGWbd5zmQa76bIrOEBRQcVqy7OEKTq8722xEbRy2zfeG95_3qzZJ9EqwItTiEoCR9BRT7GvAZWrPdn-BFXPoO7eUz7nM2mXp-kTOF2FhhVpc_H8ZoR"/>
+<div class="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-xl">
+<span class="material-symbols-outlined text-surface-container-lowest" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+<h3 class="text-body-lg font-bold text-on-surface truncate">Taylor Swift</h3>
+<p class="text-label-sm text-on-surface-variant">Artist</p>
+</div>
+<!-- Artist 3 -->
+<div class="hover:bg-surface-container-highest p-4 rounded-xl transition-all duration-300 cursor-pointer group">
+<div class="aspect-square mb-4 shadow-xl overflow-hidden rounded-full relative">
+<img class="w-full h-full object-cover" data-alt="Minimalist artistic photography of a hip-hop artist in silhouette against a vibrant orange sunset. The composition is clean and modern, following the professional dark modernism aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsvaUlQW5Dlwj48yCdaAtn15XOnnB78vrgRpLMa_sXUpJJcAtZIo_DNCW9dq5MBmNVf_ZSfp3DFAbZhcaVKuTWEGX2l9HfUuliFU8RMSaGYtHVWlfMorHweMihdwYzGgC2tAFLTAZe2QDTxY1WRO7xhmyV0iqSQ_8211suKxhpLP0SB_1Gn-ZwQbVzxYb6ziKBaRe_PGui3-nD39PpylONv8MJoJsYqitfCrGQUlQ8CNJt4iVe69YA8AOPp2T45TrquRY-xTqbOsU1"/>
+<div class="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-xl">
+<span class="material-symbols-outlined text-surface-container-lowest" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+<h3 class="text-body-lg font-bold text-on-surface truncate">Drake</h3>
+<p class="text-label-sm text-on-surface-variant">Artist</p>
+</div>
+<!-- Artist 4 -->
+<div class="hover:bg-surface-container-highest p-4 rounded-xl transition-all duration-300 cursor-pointer group">
+<div class="aspect-square mb-4 shadow-xl overflow-hidden rounded-full relative">
+<img class="w-full h-full object-cover" data-alt="Creative studio photography of a rock band lead singer with dynamic lighting. Cool blue and magenta tones highlight the artist's features against a dark, textured background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4qb803iKPAlNfxZV3apZNWsPv5uO9k8NnP5IvIoAcqJgsNHldAPa4aLknTBdeUs6bCjHC-MdgKzD_0iQSRr407lCK9FKyfTS7z5BNFBlUB1hH37Z57Byg0I-PvF3PSScTnrgzH5jVIf-sINLyJFrnII-mmRlXRyZkT0ieLIbEwLzwL3hsOXkLQ26Ja3WcE6w45pFMp239Ok_o57cdLcHH_UnGyNWEtJA-vA4BuSohe6SXg0-htZ3rOUzPW6mNwXDDpuT10A0ur-TM"/>
+<div class="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-xl">
+<span class="material-symbols-outlined text-surface-container-lowest" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+<h3 class="text-body-lg font-bold text-on-surface truncate">Arctic Monkeys</h3>
+<p class="text-label-sm text-on-surface-variant">Artist</p>
+</div>
+<!-- Artist 5 -->
+<div class="hover:bg-surface-container-highest p-4 rounded-xl transition-all duration-300 cursor-pointer group">
+<div class="aspect-square mb-4 shadow-xl overflow-hidden rounded-full relative">
+<img class="w-full h-full object-cover" data-alt="Iconic portrait of a legendary jazz musician. Black and white film photography style with high grain and dramatic lighting that focuses on the eyes. High-fidelity and premium look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYh9HNw5cTR7FylAc99P7Ye7nMIvlPmp0CDKdFmk2NWJoiANJGuElaJYII4TiHYfL3StuOZkx8RNDrjnegW5CBAX77-P7Vuhye11qjt6-EnKhgX4EVPzNAi1XKBJb-BcrgeBIkVkIX61lsADs-ScEg1dTvQbRKB05VQze1T6MxjRW81m4CHe218zZHitOpEK6bNRSo2IPBEkStLuMOPnsQ8sAGbD66V8ASgA6lebTI-7MjaVi5hSMsXaZE2MLYgeSOZz_vpWeMjLbD"/>
+<div class="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-xl">
+<span class="material-symbols-outlined text-surface-container-lowest" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+<h3 class="text-body-lg font-bold text-on-surface truncate">Billie Holiday</h3>
+<p class="text-label-sm text-on-surface-variant">Artist</p>
+</div>
+<!-- Artist 6 -->
+<div class="hover:bg-surface-container-highest p-4 rounded-xl transition-all duration-300 cursor-pointer group">
+<div class="aspect-square mb-4 shadow-xl overflow-hidden rounded-full relative">
+<img class="w-full h-full object-cover" data-alt="Sleek, futuristic portrait of an electronic music producer wearing glowing LED headphones. The image uses sharp neon lines and deep obsidian space to create a tech-forward atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHGIa7Rtp8_jpZ_UrGNt-r094-KukRwOu_Ab1ZinRsewUmSF2u5CJYY3fajwTM0YjGj6kUzknigJ4Y4z-20zGeRlqqP4C8FAMWZ_9oRM89e7P6esW0WeNp0Fh_uY-ep24pLoq23YexAkyJ4g26QkJThNn6QKHtkgtUubPtIGLS_IwQFK7dHWrxKtw8Ls4qvL6z-azInNwj-_RNMHN-z54aEjQ-GuMIRCUee4pxFkJvjnOTLPLbt-vcpSODfeBnejLbfu66Mg_DWbRg"/>
+<div class="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-xl">
+<span class="material-symbols-outlined text-surface-container-lowest" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+<h3 class="text-body-lg font-bold text-on-surface truncate">Daft Punk</h3>
+<p class="text-label-sm text-on-surface-variant">Artist</p>
+</div>
+</div>
+</section>
+<!-- Section: Made For You -->
+<section class="mb-12">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-headline-lg font-headline-lg text-on-surface tracking-tight">Made For You</h2>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+<!-- Playlist 1 -->
+<div class="bg-surface-container-low hover:bg-surface-container-highest p-4 rounded-xl transition-all duration-300 cursor-pointer group">
+<div class="relative aspect-square mb-4 shadow-lg overflow-hidden rounded-lg">
+<div class="w-full h-full bg-gradient-to-br from-primary-container to-surface-container-highest flex flex-col items-center justify-center p-6 text-center">
+<span class="material-symbols-outlined text-[64px] text-on-primary-container mb-4" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="text-display-sm font-black text-on-primary-container">Liked Songs</span>
+</div>
+<div class="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all">
+<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-xl">
+<span class="material-symbols-outlined text-surface-container-lowest" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+<p class="text-label-sm text-on-surface-variant">842 songs</p>
+</div>
+<!-- Playlist 2 -->
+<div class="bg-surface-container-low hover:bg-surface-container-highest p-4 rounded-xl transition-all duration-300 cursor-pointer group">
+<div class="relative aspect-square mb-4 shadow-lg overflow-hidden rounded-lg">
+<img class="w-full h-full object-cover" data-alt="A collage style playlist cover featuring multiple indie album covers. The design is clean with a dark translucent overlay and 'Daily Mix 1' text in a bold, modern sans-serif font." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdxPMOkAv6Tt-6bdPltFn0AfXRa4aVhRiDR2x3zoG2rWRvYku_ctGFmloUYyRbk7fRKKO2q7DgseJC1SV_RmmVfxt_tztYnYNwQhe5ordNaxDqgmjW3zqdgOvBC5E749Ux4iT6nC9jrASB5gkWlm2HGu0799g2haScXAzNlZWG2bLbSN1dOtj2u-FEZik2KKhhocPBPdbfHp_bjfRmWhVPsq1igCPeh_Bav0rctBawsu7QeJPJv3zIoQB7aIABBsbLyq9S9rk2i3K8"/>
+<div class="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all">
+<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-xl">
+<span class="material-symbols-outlined text-surface-container-lowest" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+<h3 class="text-body-lg font-bold text-on-surface truncate">Daily Mix 1</h3>
+<p class="text-label-sm text-on-surface-variant">Tame Impala, Beach House, and more</p>
+</div>
+<!-- Playlist 3 -->
+<div class="bg-surface-container-low hover:bg-surface-container-highest p-4 rounded-xl transition-all duration-300 cursor-pointer group">
+<div class="relative aspect-square mb-4 shadow-lg overflow-hidden rounded-lg">
+<img class="w-full h-full object-cover" data-alt="Vibrant playlist cover for 'Discover Weekly' with a liquid, abstract gradient in shades of lime green, electric purple, and deep navy. High-tech, generative aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3nl3XEH1mxJ743VkgR7RewH4a08S965odB7mnVGBCI0yWoEoUUonSIOzmC_YFj8YvG9weILEmv2PEkA_U4T4rXuhS244YQLgs_Vs5O3YL7e3c9OT6ExvbdPYoWktkqJfsZbafIDBD1v6dr5kW8yTsMZZkw9qsTcK3zmzk9ewNSZDB2JqYhUTgAE1mSXuF_DZlrktabhLZXoeBj28E2WDBHZfGpNYul0B1Xn40t-fNatYEotxoBOoGCBQtxQJhFiGPESLmikbBGQ7L"/>
+<div class="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all">
+<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-xl">
+<span class="material-symbols-outlined text-surface-container-lowest" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+<h3 class="text-body-lg font-bold text-on-surface truncate">Discover Weekly</h3>
+<p class="text-label-sm text-on-surface-variant">Your weekly mixtape of fresh music</p>
+</div>
+<!-- Playlist 4 -->
+<div class="bg-surface-container-low hover:bg-surface-container-highest p-4 rounded-xl transition-all duration-300 cursor-pointer group">
+<div class="relative aspect-square mb-4 shadow-lg overflow-hidden rounded-lg">
+<img class="w-full h-full object-cover" data-alt="Sophisticated 'Release Radar' playlist cover featuring a minimalist star chart graphic on a deep charcoal background. Professional, high-fidelity design with premium typography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAD7PlabJUpM3Q3DDEVWxRcicAoQT69Bka_zw404lDpaCDYt4nShRYDCL8u66lodhO2U6NJ9xGgUCsvu96H9kM8TAcFL_a8r7IXa-xVrBWz8LHZm1SMniUjQOjiiPMvE7J4J2pBJOvavxFVL3UE4F_ZI14D9gR9KNGm5VVcREzwuBu8Q_Y367wyFIthVW9cz47CtMCGWKf7IcHItuL-0dW0OqZisWRDaO6Ps2XPldIZJOkJE9PklBiUgigJBdWHjgylVgj7ufEZvXKd"/>
+<div class="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all">
+<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-xl">
+<span class="material-symbols-outlined text-surface-container-lowest" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+<h3 class="text-body-lg font-bold text-on-surface truncate">Release Radar</h3>
+<p class="text-label-sm text-on-surface-variant">Catch all the latest music from artists you follow</p>
+</div>
+</div>
+</section>
+<div class="mt-8 pt-8 border-t border-surface-variant">
+<p class="text-label-sm text-on-surface-variant italic opacity-60">Prototype — not affiliated with Spotify AB</p>
+</div>
+</div>
+</main>
+</div>
+<!-- PLAYER BOTTOM BAR -->
+<footer class="fixed bottom-0 left-0 w-full z-50 flex justify-between items-center px-gutter py-2 h-player-height bg-surface-container-lowest border-t-2 border-primary-container shadow-lg">
+<!-- Now Playing -->
+<div class="flex items-center gap-4 w-1/3">
+<div class="w-14 h-14 rounded overflow-hidden shadow-md">
+<img class="w-full h-full object-cover" data-alt="Thumbnail of an album cover featuring a lone neon streetlamp in the rain. Melancholic and atmospheric urban night photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGex4MHu7HSF3K7YaMkkMVaxvOGtUTNxd1e1oocrCBPf6fjS9mS1Z7n5drksA8JKuTvHuHmsinzdvkcdoniMHGt0yxc1pWOxOMMWbtNsfd7T1kYdQ0Vl4Lok2ON9cECM5Xf_dHR6lvEeOfOdDRhFBRSekEyb9YMaX9XOTdFsd8avLYQ6N0lhtcelidzTbu_4swiKw7ZMcdid72cNgppaCKvzjx6mmq4rPNGFW8h1BO2p9aTUcRUdAchrVCo6Wi08pehLkqYmIdx9Kp"/>
+</div>
+<div>
+<p class="text-body-md font-bold text-on-surface truncate hover:underline cursor-pointer">Starboy</p>
+<p class="text-label-sm text-on-surface-variant hover:underline cursor-pointer">The Weeknd</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer ml-2" data-icon="favorite" style="font-size: 20px;">favorite</span>
+</div>
+<!-- Controls -->
+<div class="flex flex-col items-center gap-2 w-1/3">
+<div class="flex items-center gap-6">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-on-surface cursor-pointer text-[20px]" data-icon="shuffle">shuffle</span>
+<span class="material-symbols-outlined text-on-surface hover:scale-110 transition-transform cursor-pointer text-[28px]" data-icon="skip_previous">skip_previous</span>
+<div class="w-10 h-10 bg-on-surface rounded-full flex items-center justify-center hover:scale-105 transition-transform active:scale-95 cursor-pointer">
+<span class="material-symbols-outlined text-surface-container-lowest text-[32px]" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+<span class="material-symbols-outlined text-on-surface hover:scale-110 transition-transform cursor-pointer text-[28px]" data-icon="skip_next">skip_next</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-on-surface cursor-pointer text-[20px]" data-icon="repeat">repeat</span>
+</div>
+<div class="flex items-center gap-2 w-full max-w-md">
+<span class="text-[11px] text-on-surface-variant">1:45</span>
+<div class="flex-1 h-1 bg-surface-variant rounded-full relative overflow-hidden group cursor-pointer">
+<div class="absolute left-0 top-0 h-full w-[40%] bg-on-surface group-hover:bg-primary transition-colors"></div>
+</div>
+<span class="text-[11px] text-on-surface-variant">3:50</span>
+</div>
+</div>
+<!-- Volume & Other -->
+<div class="flex items-center justify-end gap-3 w-1/3">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-on-surface cursor-pointer text-[20px]" data-icon="mic_external_on">mic_external_on</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-on-surface cursor-pointer text-[20px]" data-icon="queue_music">queue_music</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-on-surface cursor-pointer text-[20px]" data-icon="devices">devices</span>
+<div class="flex items-center gap-2 w-24 ml-2">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]" data-icon="volume_up">volume_up</span>
+<div class="flex-1 h-1 bg-surface-variant rounded-full relative overflow-hidden group cursor-pointer">
+<div class="absolute left-0 top-0 h-full w-[70%] bg-on-surface group-hover:bg-primary transition-colors"></div>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-on-surface cursor-pointer text-[20px]" data-icon="open_in_full">open_in_full</span>
+</div>
+</footer>
+<script>
+        // Simple hover effects for the main view header scroll
+        const mainPanel = document.querySelector('main');
+        mainPanel.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (mainPanel.scrollTop > 50) {
+                header.classList.add('shadow-xl');
+                header.style.backgroundColor = 'rgba(14, 14, 14, 0.95)';
+                header.style.backdropFilter = 'blur(10px)';
+            } else {
+                header.classList.remove('shadow-xl');
+                header.style.backgroundColor = '#0e0e0e';
+                header.style.backdropFilter = 'none';
+            }
+        });
+
+        // Toggle play icon
+        const playBtn = document.querySelector('.player-controls-play'); // Placeholder if you add more complex logic
+    </script>
+</body></html>
